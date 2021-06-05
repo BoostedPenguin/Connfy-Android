@@ -27,6 +27,9 @@
         <action
             android:id="@+id/action_fragment_auth_login_to_fragment_auth_main"
             app:destination="@id/fragment_auth_main" />
+        <action
+            android:id="@+id/action_fragment_auth_login_to_nav_home"
+            app:destination="@id/nav_home" />
     </fragment>
 
 
@@ -39,5 +42,4 @@
             android:id="@+id/action_fragment_auth_register_to_fragment_auth_login"
             app:destination="@id/fragment_auth_login" />
     </fragment>
-
 </navigation>

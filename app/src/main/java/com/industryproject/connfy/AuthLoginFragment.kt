@@ -1,5 +1,6 @@
 package com.industryproject.connfy
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -32,6 +33,12 @@ class AuthLoginFragment : Fragment() {
 
         view.findViewById<TextView>(R.id.loginSignUpText).setOnClickListener {
             findNavController().navigate(R.id.action_fragment_auth_login_to_fragment_auth_register)
+        }
+
+
+        //TODO authenticate user with FireBase
+        view.findViewById<Button>(R.id.buttonLoginEmail).setOnClickListener {
+            startActivity(Intent(context, DashboardActivity::class.java))
         }
     }
 }

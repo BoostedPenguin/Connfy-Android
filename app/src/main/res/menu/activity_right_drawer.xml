@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:showIn="navigation_view">
+
+    <group android:id="@+id/grp1">
+        <item
+            android:id="@+id/person1"
+            android:icon="@drawable/ic_baseline_person_24"
+            android:title="John Doe" />
+    </group>
+    <group android:id="@+id/grp2">
+        <item
+            android:id="@+id/person2"
+            android:icon="@drawable/ic_baseline_person_24"
+            android:title="John Doe" />
+    </group>
+    <group android:id="@+id/grp3">
+        <item
+            android:id="@+id/person3"
+            android:icon="@drawable/ic_baseline_person_24"
+            android:title="John Doe" />
+    </group>
+</menu>
