@@ -15,7 +15,6 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.navigation.NavigationView
@@ -27,7 +26,6 @@ class DashboardActivity : AppCompatActivity() {
     private lateinit var appBarConfigurationRight: AppBarConfiguration
     private lateinit var layout: DrawerLayout
     private lateinit var adapter: ContactRecyclerViewAdapter
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,7 +40,7 @@ class DashboardActivity : AppCompatActivity() {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(setOf(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow), drawerLayout)
+                R.id.nav_home), drawerLayout)
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
@@ -52,7 +50,7 @@ class DashboardActivity : AppCompatActivity() {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         appBarConfigurationRight = AppBarConfiguration(setOf(
-            R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow), drawerLayout)
+            R.id.nav_home), drawerLayout)
         setupActionBarWithNavController(navControllerRight, appBarConfigurationRight)
         navViewRight.setupWithNavController(navControllerRight)
 
@@ -85,11 +83,13 @@ class DashboardActivity : AppCompatActivity() {
 
         val navigationDrawer = layout.findViewById<NavigationView>(R.id.nav_view_right)
         val cons = navigationDrawer.getHeaderView(0)
-        val recyclerView: RecyclerView = cons.findViewById<RecyclerView>(R.id.contacts_recycler_view)
+        val recyclerView: RecyclerView = cons.findViewById(R.id.contacts_recycler_view)
         adapter = ContactRecyclerViewAdapter()
 
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(applicationContext)
+
+
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -103,9 +103,13 @@ class DashboardActivity : AppCompatActivity() {
 
 
     override fun onBackPressed() {
-        Toast.makeText(applicationContext, "Backing should close the app instead of going back to login", Toast.LENGTH_LONG).show()
-    }
 
+        if (findNavController(R.id.nav_host_fragment).currentDestination?.id == R.id.nav_home) {
+            Toast.makeText(applicationContext, "Should exit app on back press here", Toast.LENGTH_SHORT).show()
+            return
+        }
+        super.onBackPressed()
+    }
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.dashboard, menu)
