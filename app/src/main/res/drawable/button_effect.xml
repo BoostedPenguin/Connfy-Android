@@ -1,7 +1,8 @@
-<selector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:enterFadeDuration="@android:integer/config_shortAnimTime"
-    android:exitFadeDuration="@android:integer/config_shortAnimTime">
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle" >
+    <solid android:color="@android:color/white" />
+    <stroke android:width="1dip" android:color="#808080 "/>
+    <corners
+        android:radius="10dp"   >
+    </corners>
 
-    <item android:state_checked="false" android:drawable="@color/black"/>
-    <item android:state_checked="true"  android:drawable="@color/teal_200"/>
-</selector>
+</shape>

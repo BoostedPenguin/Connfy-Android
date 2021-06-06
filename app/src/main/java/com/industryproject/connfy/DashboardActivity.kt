@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.os.bundleOf
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.drawerlayout.widget.DrawerLayout.SimpleDrawerListener
 import androidx.navigation.findNavController
@@ -26,6 +27,13 @@ class DashboardActivity : AppCompatActivity() {
     private lateinit var appBarConfigurationRight: AppBarConfiguration
     private lateinit var layout: DrawerLayout
     private lateinit var adapter: ContactRecyclerViewAdapter
+
+    private var contacts: List<UserExample> = listOf(
+        UserExample("Gosho", "Goshoto@abv.bg"),
+        UserExample("Pesho", "Pesho@abv.bg"),
+        UserExample("Dimitar", "Dimitar@abv.bg"),
+        UserExample("Zdravko", "Zdravko@abv.bg"),
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -90,6 +98,22 @@ class DashboardActivity : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(applicationContext)
 
 
+        adapter.setOnContactButtonClickListener(object: ContactRecyclerViewAdapter.OnContactButtonClickListener {
+            override fun onContactButtonClick(position: Int, person: UserExample) {
+                layout.closeDrawer(Gravity.RIGHT)
+                navController.navigateUp()
+
+
+                val bundle = bundleOf(
+                    Pair("PERSON_NAME", person.name),
+                    Pair("PERSON_EMAIL", person.email),
+                )
+                findNavController(R.id.nav_host_fragment).navigate(R.id.nav_profile_view, bundle)
+            }
+        })
+
+        adapter.setContacts(contacts)
+
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -104,12 +128,24 @@ class DashboardActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
 
+        when {
+            layout.isDrawerOpen(Gravity.LEFT) -> {
+                layout.closeDrawer(Gravity.LEFT)
+                return
+            }
+            layout.isDrawerOpen(Gravity.RIGHT) -> {
+                layout.closeDrawer(Gravity.RIGHT)
+                return
+            }
+        }
+
         if (findNavController(R.id.nav_host_fragment).currentDestination?.id == R.id.nav_home) {
             Toast.makeText(applicationContext, "Should exit app on back press here", Toast.LENGTH_SHORT).show()
             return
         }
         super.onBackPressed()
     }
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.dashboard, menu)
