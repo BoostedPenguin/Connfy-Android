@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_home">
+
+    <fragment
+        android:id="@+id/nav_home"
+        android:name="com.industryproject.connfy.ui.home.HomeFragment"
+        android:label="@string/menu_home"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_nav_home_to_nav_meeting_view"
+            app:destination="@id/nav_meeting_view" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_meeting_view"
+        android:name="com.industryproject.connfy.ui.meeting_view.MeetingViewFragment"
+        android:label="Meeting View"
+        tools:layout="@layout/meeting_view_fragment" >
+        <action
+            android:id="@+id/action_nav_meeting_view_to_nav_home"
+            app:destination="@id/nav_home" />
+        <action
+            android:id="@+id/action_nav_meeting_view_to_nav_profile_view2"
+            app:destination="@id/nav_profile_view" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_profile_view"
+        android:name="com.industryproject.connfy.ui.profile.UserProfileFragment"
+        android:label="Profile view"
+        tools:layout="@layout/user_profile_fragment" >
+        <argument
+            android:name="personData"
+            app:argType="string"
+            android:defaultValue="GJOHO"/>
+    </fragment>
+
+</navigation>

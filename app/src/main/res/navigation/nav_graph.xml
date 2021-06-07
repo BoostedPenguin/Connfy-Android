@@ -3,26 +3,43 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/FirstFragment">
+    app:startDestination="@id/fragment_auth_main">
+
 
     <fragment
-        android:id="@+id/FirstFragment"
-        android:name="com.industryproject.connfy.FirstFragment"
-        android:label="@string/first_fragment_label"
-        tools:layout="@layout/fragment_first">
+        android:id="@+id/fragment_auth_main"
+        android:name="com.industryproject.connfy.AuthMainFragment"
+        tools:layout="@layout/fragment_auth_main">
 
         <action
-            android:id="@+id/action_FirstFragment_to_SecondFragment"
-            app:destination="@id/SecondFragment" />
+            android:id="@+id/action_fragment_auth_main_to_fragment_auth_login"
+            app:destination="@id/fragment_auth_login" />
     </fragment>
+
     <fragment
-        android:id="@+id/SecondFragment"
-        android:name="com.industryproject.connfy.SecondFragment"
-        android:label="@string/second_fragment_label"
-        tools:layout="@layout/fragment_second">
+        android:id="@+id/fragment_auth_login"
+        android:name="com.industryproject.connfy.AuthLoginFragment"
+        tools:layout="@layout/fragment_auth_login">
 
         <action
-            android:id="@+id/action_SecondFragment_to_FirstFragment"
-            app:destination="@id/FirstFragment" />
+            android:id="@+id/action_fragment_auth_login_to_fragment_auth_register"
+            app:destination="@id/fragment_auth_register" />
+        <action
+            android:id="@+id/action_fragment_auth_login_to_fragment_auth_main"
+            app:destination="@id/fragment_auth_main" />
+        <action
+            android:id="@+id/action_fragment_auth_login_to_nav_home"
+            app:destination="@id/nav_home" />
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/fragment_auth_register"
+        android:name="com.industryproject.connfy.AuthRegisterFragment"
+        tools:layout="@layout/fragment_auth_register">
+
+        <action
+            android:id="@+id/action_fragment_auth_register_to_fragment_auth_login"
+            app:destination="@id/fragment_auth_login" />
     </fragment>
 </navigation>
