@@ -18,11 +18,15 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.navigation.NavigationView
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 
-class DashboardActivity : AppCompatActivity() {
-
+class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+    private lateinit var auth: FirebaseAuth
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var appBarConfigurationRight: AppBarConfiguration
     private lateinit var layout: DrawerLayout
@@ -37,6 +41,8 @@ class DashboardActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        auth = Firebase.auth
         setContentView(R.layout.activity_dashboard)
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
@@ -51,6 +57,7 @@ class DashboardActivity : AppCompatActivity() {
                 R.id.nav_home), drawerLayout)
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+        navView.setNavigationItemSelectedListener(this)
 
 
         val navViewRight: NavigationView = findViewById(R.id.nav_view_right)
@@ -151,9 +158,19 @@ class DashboardActivity : AppCompatActivity() {
         menuInflater.inflate(R.menu.dashboard, menu)
         return true
     }
-
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+    }
+
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        when(item.itemId) {
+            R.id.nav_sign_out -> {
+                setResult(301)
+                finish()
+            }
+        }
+
+        return true
     }
 }
