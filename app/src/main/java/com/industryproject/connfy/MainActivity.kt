@@ -1,5 +1,6 @@
 package com.industryproject.connfy
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -73,6 +74,7 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.buttonSignGoogle).setOnClickListener {
             signIn()
         }
+
     }
 
     private val signOut = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -84,31 +86,10 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-//    private val signInIntent = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-//        // Handle the returned Uri
-//        if (result.resultCode == 9001) {
-//            val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
-//            try {
-//                // Google Sign In was successful, authenticate with Firebase
-//                val account = task.getResult(ApiException::class.java)!!
-//
-//
-//                Log.d("mytag", "firebaseAuthWithGoogle:" + account.id)
-//                firebaseAuthWithGoogle(account.idToken!!)
-//                //sendcall(account.idToken!!)
-//            } catch (e: ApiException) {
-//                // Google Sign In failed, update UI appropriately
-//                Log.w("mytag", "Google sign in failed", e)
-//            }
-//        }
-//    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
-        if (requestCode == 9001) {
-            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+    private val signInIntent = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        // Handle the returned Uri
+        if (result.resultCode == Activity.RESULT_OK) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
             try {
                 // Google Sign In was successful, authenticate with Firebase
                 val account = task.getResult(ApiException::class.java)!!
@@ -174,8 +155,10 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun signIn() {
-        val signInIntent = googleSignInClient.signInIntent
-        startActivityForResult(signInIntent, 9001)
+        val intent = googleSignInClient.signInIntent
+        //startActivityForResult(signInIntent, 9001)
+
+        signInIntent.launch(intent)
     }
 
 

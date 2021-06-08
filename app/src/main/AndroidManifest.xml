@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.industryproject.connfy">
 
     <application
@@ -13,6 +14,10 @@
             android:name=".DashboardActivity"
             android:label="@string/title_activity_dashboard"
             android:theme="@style/Theme.Connfy.NoActionBar" />
+        <activity
+            android:name="com.google.android.gms.auth.api.signin.internal.SignInHubActivity"
+            android:theme="@style/ProxyTheme"
+            tools:replace="android:theme" />
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"

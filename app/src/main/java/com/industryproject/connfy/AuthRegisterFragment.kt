@@ -34,11 +34,11 @@ class AuthRegisterFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         view.findViewById<TextView>(R.id.signInText).setOnClickListener {
-            findNavController().navigate(R.id.action_fragment_auth_register_to_fragment_auth_login)
+            findNavController().navigateUp()
         }
 
         view.findViewById<ImageView>(R.id.backToLogin).setOnClickListener {
-            findNavController().navigate(R.id.action_fragment_auth_register_to_fragment_auth_login)
+            findNavController().navigateUp()
         }
     }
 }
