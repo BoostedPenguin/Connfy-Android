@@ -15,6 +15,8 @@
         android:layout_margin="20dp"
         android:textSize="15sp"
         android:textAlignment="textStart"
+        android:visibility="invisible"
+
         android:drawableLeft="@drawable/ic_baseline_email_24"
         android:text="Sign in with Email"
         android:padding="12dp"
@@ -36,6 +38,8 @@
         android:text="Sign in with Google"
         android:padding="12dp"
         android:textAllCaps="false"
+        android:visibility="invisible"
+
         android:backgroundTint="@color/white"
         android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
@@ -49,6 +53,7 @@
         android:layout_marginHorizontal="20dp"
         android:textSize="15sp"
         android:textAlignment="textStart"
+        android:visibility="invisible"
         android:drawableLeft="@drawable/ic_microsoft_logo"
         android:text="Sign in with Microsoft"
         android:padding="12dp"

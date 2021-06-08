@@ -10,9 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.AppBarConfiguration
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -37,7 +35,8 @@ class AuthMainFragment : Fragment() {
             savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        setupGoogleAuth()
+
+
         return inflater.inflate(R.layout.fragment_auth_main, container, false)
     }
 
@@ -45,6 +44,7 @@ class AuthMainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupGoogleAuth()
 
 
         view.findViewById<Button>(R.id.buttonSignGoogle).setOnClickListener {
@@ -89,9 +89,15 @@ class AuthMainFragment : Fragment() {
             val intent = Intent(context, DashboardActivity::class.java)
             signOut.launch(intent)
         }
+        else {
+            updateUI()
+        }
+    }
 
-
-
+    private fun updateUI() {
+        requireView().findViewById<Button>(R.id.buttonSignGoogle).visibility = View.VISIBLE
+        requireView().findViewById<Button>(R.id.buttonSignOutlook).visibility = View.VISIBLE
+        requireView().findViewById<Button>(R.id.buttonSignEmail).visibility = View.VISIBLE
     }
 
     private fun signIn() {
@@ -125,7 +131,11 @@ class AuthMainFragment : Fragment() {
         if(result.resultCode == 301) {
             FirebaseAuth.getInstance().signOut()
             googleSignInClient.signOut().addOnCompleteListener(requireActivity()
-            ) { Log.i("mytag", "Logged out") }
+            ) {
+                Log.i("mytag", "Logged out")
+                updateUI()
+
+            }
         }
     }
 

@@ -1,11 +1,13 @@
 package com.industryproject.connfy
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.os.bundleOf
@@ -147,7 +149,20 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         }
 
         if (findNavController(R.id.nav_host_fragment).currentDestination?.id == R.id.nav_home) {
-            Toast.makeText(applicationContext, "Should exit app on back press here", Toast.LENGTH_SHORT).show()
+
+
+            val builder = AlertDialog.Builder(this)
+            builder.setMessage("Exit application")
+                    .setPositiveButton("Exit"
+                    ) { _, _ ->
+                        this.finishAffinity();
+                        finishAndRemoveTask();
+                    }
+                    .setNegativeButton("Cancel", null)
+            // Create the AlertDialog object and return it
+            builder.create()
+            builder.show()
+
             return
         }
         super.onBackPressed()
@@ -166,8 +181,19 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when(item.itemId) {
             R.id.nav_sign_out -> {
-                setResult(301)
-                finish()
+
+                val builder = AlertDialog.Builder(this)
+                builder.setMessage("Are you sure you wish to sign out of Connfy?")
+                        .setPositiveButton("Sign out"
+                        ) { _, _ ->
+                            setResult(301)
+                            finish()
+                        }
+                        .setNegativeButton("Cancel", null)
+                // Create the AlertDialog object and return it
+                builder.create()
+                builder.show()
+
             }
         }
 
