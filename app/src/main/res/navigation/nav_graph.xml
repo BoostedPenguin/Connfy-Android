@@ -8,7 +8,7 @@
 
     <fragment
         android:id="@+id/fragment_auth_main"
-        android:name="com.industryproject.connfy.AuthMainFragment"
+        android:name="com.industryproject.connfy.ui.auth.AuthMainFragment"
         tools:layout="@layout/fragment_auth_main">
 
         <action
@@ -18,7 +18,7 @@
 
     <fragment
         android:id="@+id/fragment_auth_login"
-        android:name="com.industryproject.connfy.AuthLoginFragment"
+        android:name="com.industryproject.connfy.ui.auth.AuthLoginFragment"
         tools:layout="@layout/fragment_auth_login">
 
         <action
@@ -35,7 +35,7 @@
 
     <fragment
         android:id="@+id/fragment_auth_register"
-        android:name="com.industryproject.connfy.AuthRegisterFragment"
+        android:name="com.industryproject.connfy.ui.auth.AuthRegisterFragment"
         tools:layout="@layout/fragment_auth_register">
 
         <action

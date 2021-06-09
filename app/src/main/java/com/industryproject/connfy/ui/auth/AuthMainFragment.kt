@@ -1,4 +1,4 @@
-package com.industryproject.connfy
+package com.industryproject.connfy.ui.auth
 
 import android.app.Activity
 import android.content.Intent
@@ -10,6 +10,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -19,6 +21,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.industryproject.connfy.DashboardActivity
+import com.industryproject.connfy.R
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
@@ -27,6 +31,7 @@ class AuthMainFragment : Fragment() {
 
     private lateinit var auth: FirebaseAuth
     private lateinit var googleSignInClient: GoogleSignInClient
+    private val model: AuthViewModel by activityViewModels()
 
 
 
@@ -54,6 +59,10 @@ class AuthMainFragment : Fragment() {
         view.findViewById<Button>(R.id.buttonSignEmail).setOnClickListener {
             findNavController().navigate(R.id.action_fragment_auth_main_to_fragment_auth_login)
         }
+
+        model.userLoggingIn.observe(viewLifecycleOwner, Observer { it ->
+            Log.d("ssh", "Value was updated: $it")
+        })
     }
 
     private fun setupGoogleAuth() {
@@ -102,8 +111,6 @@ class AuthMainFragment : Fragment() {
 
     private fun signIn() {
         val intent = googleSignInClient.signInIntent
-        //startActivityForResult(signInIntent, 9001)
-
         signInIntent.launch(intent)
     }
 

@@ -1,4 +1,4 @@
-package com.industryproject.connfy
+package com.industryproject.connfy.ui.auth
 
 import android.content.Intent
 import android.os.Bundle
@@ -9,13 +9,17 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import com.industryproject.connfy.DashboardActivity
+import com.industryproject.connfy.R
 
 
 /**
  * A simple [Fragment] subclass as the second destination in the navigation.
  */
 class AuthLoginFragment : Fragment() {
+    private val model: AuthViewModel by activityViewModels()
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
@@ -39,7 +43,8 @@ class AuthLoginFragment : Fragment() {
 
         //TODO authenticate user with FireBase
         view.findViewById<Button>(R.id.buttonLoginEmail).setOnClickListener {
-            startActivity(Intent(context, DashboardActivity::class.java))
+            //startActivity(Intent(context, DashboardActivity::class.java))
+            model.userLoggingIn.value = true
         }
     }
 }
