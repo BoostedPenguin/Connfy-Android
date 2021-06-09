@@ -13,11 +13,13 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.industryproject.connfy.DashboardActivity
 import com.industryproject.connfy.R
+import dagger.hilt.android.AndroidEntryPoint
 
 
 /**
  * A simple [Fragment] subclass as the second destination in the navigation.
  */
+@AndroidEntryPoint
 class AuthLoginFragment : Fragment() {
     private val model: AuthViewModel by activityViewModels()
 

@@ -1,6 +1,7 @@
 package com.industryproject.connfy.ui.auth
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -12,27 +13,39 @@ import android.widget.Button
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.activity.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.GetTokenResult
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.industryproject.connfy.DashboardActivity
 import com.industryproject.connfy.R
+import com.industryproject.connfy.networkManager.NetworkListener
+import com.industryproject.connfy.networkManager.NetworkManager
+import com.industryproject.connfy.ui.AuthViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
  */
-class AuthMainFragment : Fragment() {
+@AndroidEntryPoint
+class AuthMainFragment : Fragment(), NetworkListener {
 
     private lateinit var auth: FirebaseAuth
     private lateinit var googleSignInClient: GoogleSignInClient
     private val model: AuthViewModel by activityViewModels()
 
+    private lateinit var networkListener: NetworkListener
 
 
     override fun onCreateView(
@@ -43,6 +56,11 @@ class AuthMainFragment : Fragment() {
 
 
         return inflater.inflate(R.layout.fragment_auth_main, container, false)
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        networkListener = this
     }
 
 
@@ -60,9 +78,9 @@ class AuthMainFragment : Fragment() {
             findNavController().navigate(R.id.action_fragment_auth_main_to_fragment_auth_login)
         }
 
-        model.userLoggingIn.observe(viewLifecycleOwner, Observer { it ->
-            Log.d("ssh", "Value was updated: $it")
-        })
+        view.findViewById<Button>(R.id.buttonSignOutlook).setOnClickListener {
+            model.makeBasicRequest(networkListener)
+        }
     }
 
     private fun setupGoogleAuth() {
@@ -163,5 +181,10 @@ class AuthMainFragment : Fragment() {
                 Log.w("mytag", "Google sign in failed", e)
             }
         }
+    }
+
+    override fun getResult(result: String) {
+        Log.d("Sus", "Sucess")
+        Log.d("Sus", result)
     }
 }
