@@ -49,7 +49,7 @@ import javax.xml.transform.ErrorListener
         }
     }
 
-    fun ugabuga(param1: Any?, listener: NetworkListener<String?>) {
+    fun ugabuga(param1: Any?, listener: NetworkListener) {
         val url = prefixURL + "this/request/suffix"
         val jsonParams: MutableMap<String?, Any?> = HashMap()
         jsonParams["param1"] = param1
@@ -63,12 +63,12 @@ import javax.xml.transform.ErrorListener
                 })
         requestQueue!!.add(request)
     }
-     fun test() {
+     fun test(listener: NetworkListener) {
          val url = "https://connfy.azurewebsites.net/"
          val stringRequest = StringRequest(Request.Method.GET, url,
                  Response.Listener<String> { response ->
                      // Display the first 500 characters of the response string.
-                    Log.d("ugabuga",response)
+                     listener.getResult(response.toString())
                  },
                  Response.ErrorListener { error -> Log.d("ugabuga",error.toString())})
          requestQueue!!.add(stringRequest)

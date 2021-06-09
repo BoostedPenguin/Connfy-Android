@@ -1,6 +1,7 @@
 package com.industryproject.connfy
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -10,9 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.AppBarConfiguration
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -27,11 +26,11 @@ import com.industryproject.connfy.networkManager.NetworkManager
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
  */
-class AuthMainFragment : Fragment() {
+class AuthMainFragment : Fragment(), NetworkListener {
 
     private lateinit var auth: FirebaseAuth
     private lateinit var googleSignInClient: GoogleSignInClient
-
+    private lateinit var networkListener: NetworkListener
 
 
     override fun onCreateView(
@@ -41,6 +40,11 @@ class AuthMainFragment : Fragment() {
         // Inflate the layout for this fragment
         setupGoogleAuth()
         return inflater.inflate(R.layout.fragment_auth_main, container, false)
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        networkListener = this
     }
 
 
@@ -57,8 +61,7 @@ class AuthMainFragment : Fragment() {
             findNavController().navigate(R.id.action_fragment_auth_main_to_fragment_auth_login)
         }
         view.findViewById<Button>(R.id.buttonSignOutlook).setOnClickListener {
-             val listener = fun(): String = null!!
-            NetworkManager.getInstance()?.test()
+            NetworkManager.getInstance()?.test(networkListener)
         }
     }
 
@@ -154,5 +157,10 @@ class AuthMainFragment : Fragment() {
                 Log.w("mytag", "Google sign in failed", e)
             }
         }
+    }
+
+    override fun getResult(result: String) {
+        Log.d("Sus", "Sucess")
+        Log.d("Sus", result)
     }
 }
