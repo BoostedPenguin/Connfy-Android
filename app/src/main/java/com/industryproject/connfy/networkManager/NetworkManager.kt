@@ -49,22 +49,6 @@ import javax.xml.transform.ErrorListener
         }
     }
 
-//    @Synchronized
-//    fun getInstance(context: Context): NetworkManager? {
-//        if (null == instance) instance = NetworkManager(context)
-//        return instance
-//    }
-//
-//    //this is so you don't need to pass context each time
-//    @Synchronized
-//    fun getInstance(): NetworkManager? {
-//        checkNotNull(instance) {
-//            NetworkManager::class.java.simpleName +
-//                    " is not initialized, call getInstance(...) first"
-//        }
-//        return instance
-//    }
-
     fun ugabuga(param1: Any?, listener: NetworkListener<String?>) {
         val url = prefixURL + "this/request/suffix"
         val jsonParams: MutableMap<String?, Any?> = HashMap()

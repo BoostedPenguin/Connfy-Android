@@ -21,6 +21,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.industryproject.connfy.networkManager.NetworkListener
+import com.industryproject.connfy.networkManager.NetworkManager
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
@@ -54,7 +56,13 @@ class AuthMainFragment : Fragment() {
         view.findViewById<Button>(R.id.buttonSignEmail).setOnClickListener {
             findNavController().navigate(R.id.action_fragment_auth_main_to_fragment_auth_login)
         }
+        view.findViewById<Button>(R.id.buttonSignOutlook).setOnClickListener {
+             val listener = fun(): String = null!!
+            NetworkManager.getInstance()?.test()
+        }
     }
+
+
 
     private fun setupGoogleAuth() {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
