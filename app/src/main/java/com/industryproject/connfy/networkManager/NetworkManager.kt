@@ -2,23 +2,22 @@ package com.industryproject.connfy.networkManager
 
 import android.content.Context
 import android.util.Log
-import android.widget.Toast
+import com.android.volley.AuthFailureError
 import com.android.volley.Request
 import com.android.volley.RequestQueue
 import com.android.volley.Response
-import com.android.volley.VolleyError
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import org.json.JSONObject
-import javax.xml.transform.ErrorListener
 
- class NetworkManager(context: Context) {
+
+class NetworkManager(context: Context) {
 
     private val TAG = "NetworkManager"
     private var instance: NetworkManager? = null
 
-    private val prefixURL = "https://192.168.0.106:3000/users/sssh"
+    private val prefixURL = "https://connfy.azurewebsites.net"
 
     //for Volley API
     var requestQueue: RequestQueue? = null
@@ -63,14 +62,28 @@ import javax.xml.transform.ErrorListener
                 })
         requestQueue!!.add(request)
     }
-     fun test(listener: NetworkListener) {
-         val url = "https://connfy.azurewebsites.net/"
-         val stringRequest = StringRequest(Request.Method.GET, url,
-                 Response.Listener<String> { response ->
-                     // Display the first 500 characters of the response string.
-                     listener.getResult(response.toString())
-                 },
-                 Response.ErrorListener { error -> Log.d("ugabuga",error.toString())})
-         requestQueue!!.add(stringRequest)
+
+
+     fun test(jwtToken: String, listener: NetworkListener) {
+         val url = "$prefixURL/contacts"
+
+         //String Request initialized
+         val mStringRequest = object : StringRequest(Request.Method.GET, url, Response.Listener { response ->
+             listener.getResult(response.toString())
+
+         }, Response.ErrorListener { error ->
+             Log.i("mytag", "Error :$error")
+         }) {
+
+             override fun getHeaders(): Map<String, String>? {
+                 val headers: MutableMap<String, String> =
+                     HashMap()
+                 headers["Authorization"] = "Bearer $jwtToken"
+                 return headers
+             }
+
+         }
+
+         requestQueue!!.add(mStringRequest)
      }
 }

@@ -11,22 +11,33 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.GetTokenResult
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.industryproject.connfy.networkManager.NetworkListener
 import com.industryproject.connfy.networkManager.NetworkManager
+import com.industryproject.connfy.ui.AuthViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
  */
+@AndroidEntryPoint
 class AuthMainFragment : Fragment(), NetworkListener {
+
+    private val model: AuthViewModel by activityViewModels()
 
     private lateinit var auth: FirebaseAuth
     private lateinit var googleSignInClient: GoogleSignInClient
@@ -61,11 +72,9 @@ class AuthMainFragment : Fragment(), NetworkListener {
             findNavController().navigate(R.id.action_fragment_auth_main_to_fragment_auth_login)
         }
         view.findViewById<Button>(R.id.buttonSignOutlook).setOnClickListener {
-            NetworkManager.getInstance()?.test(networkListener)
+            model.makeBasicRequest(networkListener)
         }
     }
-
-
 
     private fun setupGoogleAuth() {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)

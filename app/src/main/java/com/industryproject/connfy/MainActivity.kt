@@ -5,52 +5,24 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
+import com.industryproject.connfy.networkManager.ConnfyApplication
 import com.industryproject.connfy.networkManager.NetworkManager
+import com.industryproject.connfy.ui.AuthViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import org.json.JSONObject
 
-
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
-
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-    }
-
-
-    fun sendcall(tokenId: String) {
-        //RequestQueue initialized
-        val mRequestQueue = Volley.newRequestQueue(this)
-
-        //String Request initialized
-        val mStringRequest = object : StringRequest(Request.Method.POST, "https://192.168.0.106:3000/users/sssh", Response.Listener { response ->
-            Toast.makeText(applicationContext, "Logged In Successfully", Toast.LENGTH_SHORT).show()
-
-
-        }, Response.ErrorListener { error ->
-            Log.i("mytag", "Error :" + error.toString())
-            Toast.makeText(applicationContext, "Please make sure you enter correct password and username", Toast.LENGTH_SHORT).show()
-        }) {
-            override fun getBodyContentType(): String {
-                return "application/json"
-            }
-
-            override fun getBody(): ByteArray {
-                val params2 = HashMap<String, String>()
-                params2["idToken"] = tokenId
-
-                return JSONObject(params2 as Map<String, String>).toString().toByteArray()
-            }
-
-        }
-        mRequestQueue!!.add(mStringRequest)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
