@@ -46,7 +46,7 @@ class AuthLoginFragment : Fragment() {
         //TODO authenticate user with FireBase
         view.findViewById<Button>(R.id.buttonLoginEmail).setOnClickListener {
             //startActivity(Intent(context, DashboardActivity::class.java))
-            model.userLoggingIn.value = true
+            //model.userLoggingIn.value = true
         }
     }
 }

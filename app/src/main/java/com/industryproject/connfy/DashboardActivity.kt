@@ -7,12 +7,15 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.os.bundleOf
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.drawerlayout.widget.DrawerLayout.SimpleDrawerListener
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
@@ -25,8 +28,11 @@ import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.industryproject.connfy.models.User
+import com.industryproject.connfy.ui.auth.AuthViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     private lateinit var auth: FirebaseAuth
     private lateinit var appBarConfiguration: AppBarConfiguration
@@ -34,12 +40,7 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
     private lateinit var layout: DrawerLayout
     private lateinit var adapter: ContactRecyclerViewAdapter
 
-    private var contacts: List<UserExample> = listOf(
-        UserExample("Gosho", "Goshoto@abv.bg"),
-        UserExample("Pesho", "Pesho@abv.bg"),
-        UserExample("Dimitar", "Dimitar@abv.bg"),
-        UserExample("Zdravko", "Zdravko@abv.bg"),
-    )
+    private val model: DashboardViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -108,7 +109,7 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
 
 
         adapter.setOnContactButtonClickListener(object: ContactRecyclerViewAdapter.OnContactButtonClickListener {
-            override fun onContactButtonClick(position: Int, person: UserExample) {
+            override fun onContactButtonClick(position: Int, person: User) {
                 layout.closeDrawer(Gravity.RIGHT)
                 navController.navigateUp()
 
@@ -121,7 +122,9 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
             }
         })
 
-        adapter.setContacts(contacts)
+        model.contacts.observe(this, Observer {
+            it.data?.let { it1 -> adapter.setContacts(it1) }
+        })
 
     }
 

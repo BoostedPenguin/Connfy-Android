@@ -1,21 +1,10 @@
 package com.industryproject.connfy
 
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Toast
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import com.android.volley.Request
-import com.android.volley.Response
-import com.android.volley.toolbox.StringRequest
-import com.android.volley.toolbox.Volley
-import com.industryproject.connfy.networkManager.ConnfyApplication
-import com.industryproject.connfy.networkManager.NetworkManager
-import com.industryproject.connfy.ui.AuthViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import org.json.JSONObject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {

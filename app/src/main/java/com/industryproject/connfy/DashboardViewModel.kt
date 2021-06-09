@@ -1,4 +1,4 @@
-package com.industryproject.connfy.ui.auth
+package com.industryproject.connfy
 
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -7,13 +7,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.industryproject.connfy.models.UserResponse
 import com.industryproject.connfy.repository.UserRepository
-import com.industryproject.connfy.utilities.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class AuthViewModel @Inject constructor(
+class DashboardViewModel @Inject constructor(
     private val userRepository: UserRepository
 ) : ViewModel() {
 
@@ -21,14 +20,14 @@ class AuthViewModel @Inject constructor(
         MutableLiveData<UserResponse>()
 
     val contacts : LiveData<UserResponse>
-            get() = _contacts
+        get() = _contacts
 
     init {
-//        getEmployees()
+        getContacts()
     }
 
 
-    fun getContacts()  = viewModelScope.launch {
+    private fun getContacts()  = viewModelScope.launch {
         userRepository.getContacts().let {
             if (it.isSuccessful){
                 _contacts.postValue(it.body())

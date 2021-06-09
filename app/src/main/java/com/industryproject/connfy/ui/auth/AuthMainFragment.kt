@@ -13,39 +13,30 @@ import android.widget.Button
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.activity.viewModels
-import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.GetTokenResult
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.industryproject.connfy.DashboardActivity
 import com.industryproject.connfy.R
-import com.industryproject.connfy.networkManager.NetworkListener
-import com.industryproject.connfy.networkManager.NetworkManager
-import com.industryproject.connfy.ui.AuthViewModel
+import com.industryproject.connfy.ui.auth.AuthViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
  */
 @AndroidEntryPoint
-class AuthMainFragment : Fragment(), NetworkListener {
+class AuthMainFragment : Fragment() {
 
     private lateinit var auth: FirebaseAuth
     private lateinit var googleSignInClient: GoogleSignInClient
     private val model: AuthViewModel by activityViewModels()
 
-    private lateinit var networkListener: NetworkListener
 
 
     override fun onCreateView(
@@ -57,12 +48,6 @@ class AuthMainFragment : Fragment(), NetworkListener {
 
         return inflater.inflate(R.layout.fragment_auth_main, container, false)
     }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        networkListener = this
-    }
-
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -79,7 +64,7 @@ class AuthMainFragment : Fragment(), NetworkListener {
         }
 
         view.findViewById<Button>(R.id.buttonSignOutlook).setOnClickListener {
-            model.makeBasicRequest(networkListener)
+            model.getContacts()
         }
     }
 
@@ -92,25 +77,6 @@ class AuthMainFragment : Fragment(), NetworkListener {
         googleSignInClient = GoogleSignIn.getClient(requireActivity(), gso)
 
         auth = Firebase.auth
-
-
-        // TODO
-        // This needs to be called on every request API request to backend.
-        // Token is most often cached so it is optimized
-        // Have to create a wrapper around it
-        auth.currentUser?.getIdToken(false)
-                ?.addOnCompleteListener {
-                    if (it.isSuccessful) {
-                        val idToken: String? = it.result?.token
-
-                        idToken
-
-                        // Send token to your backend via HTTPS
-                        // ...
-                    } else {
-                        // Handle error -> task.getException();
-                    }
-                }
 
         if( auth.currentUser != null){
             val intent = Intent(context, DashboardActivity::class.java)
@@ -181,10 +147,5 @@ class AuthMainFragment : Fragment(), NetworkListener {
                 Log.w("mytag", "Google sign in failed", e)
             }
         }
-    }
-
-    override fun getResult(result: String) {
-        Log.d("Sus", "Sucess")
-        Log.d("Sus", result)
     }
 }

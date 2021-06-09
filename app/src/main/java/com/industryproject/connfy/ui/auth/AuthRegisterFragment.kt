@@ -14,6 +14,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.industryproject.connfy.R
+import dagger.hilt.android.AndroidEntryPoint
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -25,6 +26,7 @@ private const val ARG_PARAM2 = "param2"
  * Use the [AuthRegisterFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
+@AndroidEntryPoint
 class AuthRegisterFragment : Fragment() {
     private lateinit var auth: FirebaseAuth
 
@@ -51,7 +53,7 @@ class AuthRegisterFragment : Fragment() {
         }
 
         view.findViewById<Button>(R.id.buttonCreateEmail).setOnClickListener {
-            createuser()
+            //createuser()
         }
     }
 
