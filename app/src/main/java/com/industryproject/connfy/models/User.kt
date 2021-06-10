@@ -24,3 +24,7 @@ data class UserResponse(
     val data: List<User>,
     val status: String?,
 )
+
+data class SelfUser(
+    val data: User,
+)

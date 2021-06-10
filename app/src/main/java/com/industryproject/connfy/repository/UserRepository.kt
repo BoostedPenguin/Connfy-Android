@@ -22,4 +22,5 @@ class UserRepository @Inject constructor(
     suspend fun getUsers() = userHelper.getUsers()
     suspend fun getContacts() = userHelper.getUserContacts()
     suspend fun createUserInDB() = userHelper.createUserInDB()
+    suspend fun getMainUserInfo() = userHelper.getMainUserInfo()
 }

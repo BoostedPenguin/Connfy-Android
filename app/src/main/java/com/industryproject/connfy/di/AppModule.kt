@@ -1,5 +1,6 @@
 package com.industryproject.connfy.di
 
+import com.google.gson.GsonBuilder
 import com.industryproject.connfy.BuildConfig
 import com.industryproject.connfy.api.UserHelper
 import com.industryproject.connfy.api.UserHelperImpl
@@ -23,7 +24,7 @@ import javax.inject.Singleton
 object AppModule{
 
     @Provides
-    fun provideBaseUrl() = "https://connfy.azurewebsites.net/"
+    fun provideBaseUrl() = "http://10.0.2.2:3000/"
 
 
     class NullOnEmptyConverterFactory : Converter.Factory() {
@@ -65,7 +66,7 @@ object AppModule{
     @Provides
     fun provideRetrofit(okHttpClient: OkHttpClient, BASE_URL:String): Retrofit = Retrofit.Builder()
         .addConverterFactory(NullOnEmptyConverterFactory())
-        .addConverterFactory(GsonConverterFactory.create())
+        .addConverterFactory(GsonConverterFactory.create(GsonBuilder().setLenient().create()))
         .baseUrl(BASE_URL)
         .client(okHttpClient)
         .build()

@@ -45,6 +45,7 @@ class AuthViewModel @Inject constructor(
         userRepository.createUserInDB().let {
             if (it.isSuccessful){
                 onCreationComplete.value = true
+                Log.d("retrofit", "Added user to firestore repo")
             }else{
                 Log.d("retrofit", it.message())
                 Log.d("retrofit", it.code().toString())

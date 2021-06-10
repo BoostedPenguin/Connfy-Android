@@ -5,6 +5,7 @@ import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -47,6 +48,25 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
+        setupDrawers()
+
+        model.contacts.observe(this, Observer {
+            it?.data?.let { it1 ->
+                adapter.setContacts(it1)
+            }
+        })
+
+        model.thisUser.observe(this, Observer {
+            it?.data?.let { it1 ->
+                val headerLayout: View = findViewById<NavigationView>(R.id.nav_view).getHeaderView(0)
+                headerLayout.findViewById<TextView>(R.id.leftDrawerPersonName).text = it1.name
+                headerLayout.findViewById<TextView>(R.id.leftDrawerPersonEmail).text = auth.currentUser?.email
+            }
+        })
+
+    }
+
+    private fun setupDrawers() {
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
 
         val navView: NavigationView = findViewById(R.id.nav_view)
@@ -112,19 +132,12 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
 
 
                 val bundle = bundleOf(
-                    Pair("PERSON_NAME", person.name),
-                    Pair("PERSON_EMAIL", person.email),
+                        Pair("PERSON_NAME", person.name),
+                        Pair("PERSON_EMAIL", person.email),
                 )
                 findNavController(R.id.nav_host_fragment).navigate(R.id.nav_profile_view, bundle)
             }
         })
-
-        model.contacts.observe(this, Observer {
-            it?.data?.let { it1 ->
-                adapter.setContacts(it1)
-            }
-        })
-
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
