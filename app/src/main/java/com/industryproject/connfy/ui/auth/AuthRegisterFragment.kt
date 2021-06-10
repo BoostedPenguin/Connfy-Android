@@ -1,19 +1,23 @@
 package com.industryproject.connfy.ui.auth
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
+import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.*
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.industryproject.connfy.R
+import com.industryproject.connfy.ui.dashboard_activity.DashboardActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 // TODO: Rename parameter arguments, choose names that match
@@ -29,6 +33,7 @@ private const val ARG_PARAM2 = "param2"
 @AndroidEntryPoint
 class AuthRegisterFragment : Fragment() {
     private lateinit var auth: FirebaseAuth
+    private val model: AuthViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -53,32 +58,62 @@ class AuthRegisterFragment : Fragment() {
         }
 
         view.findViewById<Button>(R.id.buttonCreateEmail).setOnClickListener {
-            //createuser()
+
+            val email: String = view.findViewById<EditText>(R.id.createEmail).text.toString()
+            val password: String = view.findViewById<EditText>(R.id.createPassword).text.toString()
+
+            if(!isEmailValid(email)) {
+                Toast.makeText(context, "Email isn't valid", Toast.LENGTH_SHORT).show()
+            }
+            else if(password.isEmpty()) {
+                Toast.makeText(context, "Password isn't valid", Toast.LENGTH_SHORT).show()
+            }
+            else {
+                createUser(email, password)
+            }
         }
+
+        model.onCreationComplete.observe(viewLifecycleOwner, Observer {
+            if(it) {
+                val intent = Intent(context, DashboardActivity::class.java)
+                signOut.launch(intent)
+            }
+        })
     }
 
+    private fun isEmailValid(email: CharSequence): Boolean {
+        return Patterns.EMAIL_ADDRESS.matcher(email).matches()
+    }
 
-    private fun createuser() {
-        auth.createUserWithEmailAndPassword("myrandomemail@abv.bg", "testing")
+    private fun createUser(email: String, password: String) {
+        auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(requireActivity()) { task ->
                     if (task.isSuccessful) {
                         // Sign in success, update UI with the signed-in user's information
-                        val user = auth.currentUser
 
                         auth.currentUser?.getIdToken(false)
                                 ?.addOnCompleteListener {
                                     if (it.isSuccessful) {
                                         val idToken: String? = it.result?.token
                                         Log.d("IDTOKEN", idToken.toString())
+
+                                        model.createUserInDB()
                                     } else {
-                                        // Handle error -> task.getException();
+                                        Log.d("create_user", task.exception?.message.toString())
                                     }
                                 }
 
                     } else {
                         // If sign in fails, display a message to the user.
-
+                        Toast.makeText(context, task.exception?.message.toString(), Toast.LENGTH_SHORT).show()
                     }
                 }
+    }
+
+    private val signOut = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        // Handle the returned Uri
+        if(result.resultCode == 301) {
+            FirebaseAuth.getInstance().signOut()
+        }
     }
 }

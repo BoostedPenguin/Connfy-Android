@@ -23,6 +23,8 @@ class AuthViewModel @Inject constructor(
     val contacts : LiveData<UserResponse>
             get() = _contacts
 
+    val onCreationComplete = MutableLiveData<Boolean>(false)
+
     init {
 //        getEmployees()
     }
@@ -32,6 +34,17 @@ class AuthViewModel @Inject constructor(
         userRepository.getContacts().let {
             if (it.isSuccessful){
                 _contacts.postValue(it.body())
+            }else{
+                Log.d("retrofit", it.message())
+                Log.d("retrofit", it.code().toString())
+            }
+        }
+    }
+
+    fun createUserInDB() = viewModelScope.launch {
+        userRepository.createUserInDB().let {
+            if (it.isSuccessful){
+                onCreationComplete.value = true
             }else{
                 Log.d("retrofit", it.message())
                 Log.d("retrofit", it.code().toString())

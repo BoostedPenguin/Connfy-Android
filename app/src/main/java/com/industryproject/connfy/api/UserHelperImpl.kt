@@ -20,6 +20,7 @@ class UserHelperImpl @Inject constructor(
 
     override suspend fun getUsers(): Response<UserResponse> = userService.getUsers()
     override suspend fun getUserContacts(): Response<UserResponse> = userService.getUserContacts("Bearer ".plus(getTokenResult()?.token!!))
+    override suspend fun createUserInDB(): Response<UserResponse> = userService.createUserInDB("Bearer ".plus(getTokenResult()?.token!!))
 
     @WorkerThread
     private suspend fun getTokenResult () = suspendCoroutine<GetTokenResult?> { continuation ->

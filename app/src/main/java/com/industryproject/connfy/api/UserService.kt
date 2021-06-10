@@ -4,8 +4,12 @@ import com.industryproject.connfy.models.UserResponse
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Header
+import retrofit2.http.POST
 
 interface UserService{
+
+    @POST("users/create")
+    suspend fun createUserInDB(@Header("Authorization") header: String) : Response<UserResponse>
 
     @GET("users")
     suspend fun getUsers(): Response<UserResponse>
