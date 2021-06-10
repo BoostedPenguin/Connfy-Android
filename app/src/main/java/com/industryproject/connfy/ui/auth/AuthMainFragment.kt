@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -63,6 +64,13 @@ class AuthMainFragment : Fragment() {
         view.findViewById<Button>(R.id.buttonSignOutlook).setOnClickListener {
             model.getContacts()
         }
+
+//        model.onCreationComplete.observe(viewLifecycleOwner, Observer {
+//            if(it) {
+//                val intent = Intent(context, DashboardActivity::class.java)
+//                signOut.launch(intent)
+//            }
+//        })
     }
 
     private fun setupGoogleAuth() {
@@ -103,6 +111,7 @@ class AuthMainFragment : Fragment() {
                         // Sign in success, update UI with the signed-in user's information
                         Log.d("mytag", "signInWithCredential:success")
                         val user = auth.currentUser
+
 
                         val intent = Intent(context, DashboardActivity::class.java)
                         signOut.launch(intent)

@@ -120,7 +120,9 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         })
 
         model.contacts.observe(this, Observer {
-            it.data?.let { it1 -> adapter.setContacts(it1) }
+            it?.data?.let { it1 ->
+                adapter.setContacts(it1)
+            }
         })
 
     }

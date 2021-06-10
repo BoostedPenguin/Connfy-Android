@@ -21,6 +21,6 @@ data class User(
 )
 
 data class UserResponse(
-    val data: List<User>?,
+    val data: List<User>,
     val status: String?,
 )

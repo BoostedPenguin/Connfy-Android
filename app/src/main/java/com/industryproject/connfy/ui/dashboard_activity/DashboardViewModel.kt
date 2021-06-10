@@ -30,7 +30,7 @@ class DashboardViewModel @Inject constructor(
     private fun getContacts()  = viewModelScope.launch {
         userRepository.getContacts().let {
             if (it.isSuccessful){
-                //_contacts.postValue(it.body())
+                _contacts.postValue(it.body())
             }else{
                 Log.d("retrofit", it.message())
                 Log.d("retrofit", it.code().toString())
