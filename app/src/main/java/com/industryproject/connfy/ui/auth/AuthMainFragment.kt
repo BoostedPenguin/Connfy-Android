@@ -1,7 +1,6 @@
 package com.industryproject.connfy.ui.auth
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -12,7 +11,6 @@ import android.view.ViewGroup
 import android.widget.Button
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -22,9 +20,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import com.industryproject.connfy.DashboardActivity
+import com.industryproject.connfy.ui.dashboard_activity.DashboardActivity
 import com.industryproject.connfy.R
-import com.industryproject.connfy.ui.auth.AuthViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 /**

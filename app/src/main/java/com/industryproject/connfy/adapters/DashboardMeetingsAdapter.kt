@@ -1,4 +1,4 @@
-package com.industryproject.connfy
+package com.industryproject.connfy.adapters
 
 import android.view.LayoutInflater
 import android.view.View
@@ -7,7 +7,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
-
+import com.industryproject.connfy.MeetingExample
+import com.industryproject.connfy.R
 
 
 class DashboardMeetingsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {

@@ -1,16 +1,11 @@
-package com.industryproject.connfy
+package com.industryproject.connfy.adapters
 
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CheckBox
-import android.widget.ImageButton
-import android.widget.ImageView
 import android.widget.TextView
-import androidx.cardview.widget.CardView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
+import com.industryproject.connfy.R
 import com.industryproject.connfy.models.User
 
 class ContactRecyclerViewAdapter : RecyclerView.Adapter<ContactRecyclerViewAdapter.ContactHolder>() {

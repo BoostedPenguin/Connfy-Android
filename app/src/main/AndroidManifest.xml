@@ -15,7 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Connfy">
         <activity
-            android:name=".DashboardActivity"
+            android:name=".ui.dashboard_activity.DashboardActivity"
             android:label="@string/title_activity_dashboard"
             android:theme="@style/Theme.Connfy.NoActionBar" />
         <activity

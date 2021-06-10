@@ -1,4 +1,4 @@
-package com.industryproject.connfy
+package com.industryproject.connfy.ui.dashboard_activity
 
 import android.util.Log
 import androidx.lifecycle.LiveData

@@ -1,12 +1,10 @@
-package com.industryproject.connfy
+package com.industryproject.connfy.ui.dashboard_activity
 
-import android.content.DialogInterface
 import android.os.Bundle
 import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -14,7 +12,6 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.os.bundleOf
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.drawerlayout.widget.DrawerLayout.SimpleDrawerListener
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -23,13 +20,13 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.industryproject.connfy.R
+import com.industryproject.connfy.adapters.ContactRecyclerViewAdapter
 import com.industryproject.connfy.models.User
-import com.industryproject.connfy.ui.auth.AuthViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -68,7 +65,7 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         appBarConfigurationRight = AppBarConfiguration(setOf(
-            R.id.nav_home), drawerLayout)
+                R.id.nav_home), drawerLayout)
         setupActionBarWithNavController(navControllerRight, appBarConfigurationRight)
         navViewRight.setupWithNavController(navControllerRight)
 
