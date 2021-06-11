@@ -50,6 +50,9 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
 
         setupDrawers()
 
+        model.getContacts()
+        model.getMainUserInfo()
+
         model.contacts.observe(this, Observer {
             it?.data?.let { it1 ->
                 adapter.setContacts(it1)
@@ -59,7 +62,9 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         model.thisUser.observe(this, Observer {
             it?.data?.let { it1 ->
                 val headerLayout: View = findViewById<NavigationView>(R.id.nav_view).getHeaderView(0)
-                headerLayout.findViewById<TextView>(R.id.leftDrawerPersonName).text = it1.name
+
+                val displayName: String = it1.name ?: auth.currentUser?.displayName?: ""
+                headerLayout.findViewById<TextView>(R.id.leftDrawerPersonName).text = displayName
                 headerLayout.findViewById<TextView>(R.id.leftDrawerPersonEmail).text = auth.currentUser?.email
             }
         })

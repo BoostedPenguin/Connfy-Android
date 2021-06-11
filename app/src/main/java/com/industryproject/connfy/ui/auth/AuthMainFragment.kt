@@ -65,12 +65,13 @@ class AuthMainFragment : Fragment() {
             model.getContacts()
         }
 
-//        model.onCreationComplete.observe(viewLifecycleOwner, Observer {
-//            if(it) {
-//                val intent = Intent(context, DashboardActivity::class.java)
-//                signOut.launch(intent)
-//            }
-//        })
+        model.onCreationComplete.observe(viewLifecycleOwner, Observer {
+            if(it) {
+                model.onCreationComplete.value = false;
+                val intent = Intent(context, DashboardActivity::class.java)
+                signOut.launch(intent)
+            }
+        })
     }
 
     private fun setupGoogleAuth() {
@@ -112,9 +113,7 @@ class AuthMainFragment : Fragment() {
                         Log.d("mytag", "signInWithCredential:success")
                         val user = auth.currentUser
 
-
-                        val intent = Intent(context, DashboardActivity::class.java)
-                        signOut.launch(intent)
+                        model.createUserInDBGoogle("GOOGLE")
                     } else {
                         // If sign in fails, display a message to the user.
                         Log.w("mytag", "signInWithCredential:failure", task.exception)
