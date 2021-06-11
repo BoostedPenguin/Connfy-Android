@@ -1,4 +1,4 @@
-package com.industryproject.connfy.ui.home
+package com.industryproject.connfy.ui.dashboard_home
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

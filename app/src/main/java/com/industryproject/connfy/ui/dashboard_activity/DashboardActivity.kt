@@ -1,16 +1,19 @@
-package com.industryproject.connfy
+package com.industryproject.connfy.ui.dashboard_activity
 
 import android.os.Bundle
 import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
+import android.widget.TextView
+import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.os.bundleOf
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.drawerlayout.widget.DrawerLayout.SimpleDrawerListener
+import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
@@ -19,28 +22,51 @@ import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.navigation.NavigationView
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
+import com.industryproject.connfy.R
+import com.industryproject.connfy.adapters.ContactRecyclerViewAdapter
+import com.industryproject.connfy.models.User
+import dagger.hilt.android.AndroidEntryPoint
 
-
-class DashboardActivity : AppCompatActivity() {
-
+@AndroidEntryPoint
+class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+    private lateinit var auth: FirebaseAuth
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var appBarConfigurationRight: AppBarConfiguration
     private lateinit var layout: DrawerLayout
     private lateinit var adapter: ContactRecyclerViewAdapter
 
-    private var contacts: List<UserExample> = listOf(
-        UserExample("Gosho", "Goshoto@abv.bg"),
-        UserExample("Pesho", "Pesho@abv.bg"),
-        UserExample("Dimitar", "Dimitar@abv.bg"),
-        UserExample("Zdravko", "Zdravko@abv.bg"),
-    )
+    private val model: DashboardViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        auth = Firebase.auth
         setContentView(R.layout.activity_dashboard)
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
+        setupDrawers()
+
+        model.contacts.observe(this, Observer {
+            it?.data?.let { it1 ->
+                adapter.setContacts(it1)
+            }
+        })
+
+        model.thisUser.observe(this, Observer {
+            it?.data?.let { it1 ->
+                val headerLayout: View = findViewById<NavigationView>(R.id.nav_view).getHeaderView(0)
+                headerLayout.findViewById<TextView>(R.id.leftDrawerPersonName).text = it1.name
+                headerLayout.findViewById<TextView>(R.id.leftDrawerPersonEmail).text = auth.currentUser?.email
+            }
+        })
+
+    }
+
+    private fun setupDrawers() {
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
 
         val navView: NavigationView = findViewById(R.id.nav_view)
@@ -51,6 +77,7 @@ class DashboardActivity : AppCompatActivity() {
                 R.id.nav_home), drawerLayout)
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+        navView.setNavigationItemSelectedListener(this)
 
 
         val navViewRight: NavigationView = findViewById(R.id.nav_view_right)
@@ -58,7 +85,7 @@ class DashboardActivity : AppCompatActivity() {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         appBarConfigurationRight = AppBarConfiguration(setOf(
-            R.id.nav_home), drawerLayout)
+                R.id.nav_home), drawerLayout)
         setupActionBarWithNavController(navControllerRight, appBarConfigurationRight)
         navViewRight.setupWithNavController(navControllerRight)
 
@@ -99,21 +126,18 @@ class DashboardActivity : AppCompatActivity() {
 
 
         adapter.setOnContactButtonClickListener(object: ContactRecyclerViewAdapter.OnContactButtonClickListener {
-            override fun onContactButtonClick(position: Int, person: UserExample) {
+            override fun onContactButtonClick(position: Int, person: User) {
                 layout.closeDrawer(Gravity.RIGHT)
                 navController.navigateUp()
 
 
                 val bundle = bundleOf(
-                    Pair("PERSON_NAME", person.name),
-                    Pair("PERSON_EMAIL", person.email),
+                        Pair("PERSON_NAME", person.name),
+                        Pair("PERSON_EMAIL", person.email),
                 )
                 findNavController(R.id.nav_host_fragment).navigate(R.id.nav_profile_view, bundle)
             }
         })
-
-        adapter.setContacts(contacts)
-
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -140,7 +164,20 @@ class DashboardActivity : AppCompatActivity() {
         }
 
         if (findNavController(R.id.nav_host_fragment).currentDestination?.id == R.id.nav_home) {
-            Toast.makeText(applicationContext, "Should exit app on back press here", Toast.LENGTH_SHORT).show()
+
+
+            val builder = AlertDialog.Builder(this)
+            builder.setMessage("Exit application")
+                    .setPositiveButton("Exit"
+                    ) { _, _ ->
+                        this.finishAffinity();
+                        finishAndRemoveTask();
+                    }
+                    .setNegativeButton("Cancel", null)
+            // Create the AlertDialog object and return it
+            builder.create()
+            builder.show()
+
             return
         }
         super.onBackPressed()
@@ -151,9 +188,30 @@ class DashboardActivity : AppCompatActivity() {
         menuInflater.inflate(R.menu.dashboard, menu)
         return true
     }
-
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+    }
+
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        when(item.itemId) {
+            R.id.nav_sign_out -> {
+
+                val builder = AlertDialog.Builder(this)
+                builder.setMessage("Are you sure you wish to sign out of Connfy?")
+                        .setPositiveButton("Sign out"
+                        ) { _, _ ->
+                            setResult(301)
+                            finish()
+                        }
+                        .setNegativeButton("Cancel", null)
+                // Create the AlertDialog object and return it
+                builder.create()
+                builder.show()
+
+            }
+        }
+
+        return true
     }
 }

@@ -1,21 +1,17 @@
-package com.industryproject.connfy
+package com.industryproject.connfy.adapters
 
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CheckBox
-import android.widget.ImageButton
-import android.widget.ImageView
 import android.widget.TextView
-import androidx.cardview.widget.CardView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
+import com.industryproject.connfy.R
+import com.industryproject.connfy.models.User
 
 class ContactRecyclerViewAdapter : RecyclerView.Adapter<ContactRecyclerViewAdapter.ContactHolder>() {
 
     // Replace with data model
-    private var contacts: List<UserExample> = ArrayList()
+    private var contacts: List<User> = ArrayList()
     private var contactButtonClickListener: OnContactButtonClickListener? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ContactHolder {
@@ -25,7 +21,7 @@ class ContactRecyclerViewAdapter : RecyclerView.Adapter<ContactRecyclerViewAdapt
         return ContactHolder(itemView)
     }
 
-    fun setContacts(contacts: List<UserExample>) {
+    fun setContacts(contacts: List<User>) {
         this.contacts = contacts
         notifyDataSetChanged()
     }
@@ -42,7 +38,7 @@ class ContactRecyclerViewAdapter : RecyclerView.Adapter<ContactRecyclerViewAdapt
     }
 
     interface OnContactButtonClickListener {
-        fun onContactButtonClick(position: Int, person: UserExample)
+        fun onContactButtonClick(position: Int, person: User)
     }
 
     fun setOnContactButtonClickListener(listener: OnContactButtonClickListener?) {
@@ -51,7 +47,7 @@ class ContactRecyclerViewAdapter : RecyclerView.Adapter<ContactRecyclerViewAdapt
 
     inner class ContactHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         internal val contactButton: TextView = itemView.findViewById(R.id.buttonContact)
-        internal lateinit var contact: UserExample
+        internal lateinit var contact: User
         init {
             //TODO Listeners go here
 

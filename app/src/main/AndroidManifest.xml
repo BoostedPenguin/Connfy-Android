@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.industryproject.connfy">
 
+    <!--permissions for INTERNET-->
+    <uses-permission android:name="android.permission.INTERNET"/>
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but you must specify either coarse or fine
@@ -10,7 +13,9 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
+        android:name=".ConnfyApplication"
         android:allowBackup="true"
+        android:usesCleartextTraffic="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
@@ -30,9 +35,13 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".DashboardActivity"
+            android:name=".ui.dashboard_activity.DashboardActivity"
             android:label="@string/title_activity_dashboard"
             android:theme="@style/Theme.Connfy.NoActionBar" />
+        <activity
+            android:name="com.google.android.gms.auth.api.signin.internal.SignInHubActivity"
+            android:theme="@style/ProxyTheme"
+            tools:replace="android:theme" />
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
