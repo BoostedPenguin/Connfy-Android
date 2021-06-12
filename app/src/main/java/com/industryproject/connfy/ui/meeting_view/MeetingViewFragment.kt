@@ -8,22 +8,34 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.industryproject.connfy.R
+import com.industryproject.connfy.adapters.ContactRecyclerViewAdapter
+import com.industryproject.connfy.adapters.MeetingUsersAdapter
+import com.industryproject.connfy.models.User
+import com.industryproject.connfy.ui.dashboard_activity.DashboardViewModel
+
 
 class MeetingViewFragment : Fragment() {
 
     private var locationPermissionGranted: Boolean = false
+    private lateinit var contactsAdapter: MeetingUsersAdapter
+
+    private val model: DashboardViewModel by activityViewModels()
+
 
     @SuppressLint("MissingPermission")
     private val callback = OnMapReadyCallback { googleMap ->
@@ -44,12 +56,37 @@ class MeetingViewFragment : Fragment() {
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(eindhoven, 14f))
     }
 
-    companion object {
-        fun newInstance() = MeetingViewFragment()
+    private fun initUserRecyclerView() {
+        val recyclerView: RecyclerView = requireView().findViewById(R.id.createMeetingUsersRecyclerView)
+        contactsAdapter = MeetingUsersAdapter()
+
+        recyclerView.adapter = contactsAdapter
+        recyclerView.layoutManager = LinearLayoutManager(context)
+
+        // Add invited users to this method :)
+        val users = mutableListOf<User>(
+                User("uid", "Some name", "Some email", false),
+                User("uid2", "Some name2", "Some email2", false),
+                User("uid3", "Some name3", "Some email3", false),
+                User("uid4", "Some name4", "Some email4", false),
+                User("uid", "Some name", "Some email", false),
+                User("uid2", "Some name2", "Some email2", false),
+                User("uid3", "Some name3", "Some email3", false),
+                User("uid4", "Some name4", "Some email4", false),
+        )
+        contactsAdapter.setInvitedUsers(users)
+
+        val dividerItemDecoration = DividerItemDecoration(recyclerView.context,
+                LinearLayoutManager(context).orientation)
+
+        recyclerView.addItemDecoration(dividerItemDecoration)
+
+        contactsAdapter.setOnContactButtonClickListener(object: MeetingUsersAdapter.OnContactButtonClickListener {
+            override fun onContactButtonClick(position: Int, person: User) {
+                TODO("Not yet implemented")
+            }
+        })
     }
-
-    private lateinit var viewModel: MeetingViewViewModel
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.meeting_view_fragment, container, false)
@@ -62,8 +99,9 @@ class MeetingViewFragment : Fragment() {
         val mapFragment = childFragmentManager.findFragmentById(R.id.mapView) as SupportMapFragment?
         mapFragment?.getMapAsync(callback)
 
-        viewModel = ViewModelProvider(this).get(MeetingViewViewModel::class.java)
-        // TODO: Use the ViewModel
+        // Invited Users adapter
+        initUserRecyclerView()
+
     }
 
     private fun checkLocationPermissions() {

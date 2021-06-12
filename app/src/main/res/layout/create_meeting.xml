@@ -14,13 +14,13 @@
         />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/createMeetingUsersRecyclerView"
+        android:id="@+id/smthElse"
         app:layout_constraintTop_toBottomOf="@+id/mapView"
         android:layout_width="match_parent"
         android:layout_height="200dp" />
 
     <Button
-        app:layout_constraintTop_toBottomOf="@+id/createMeetingUsersRecyclerView"
+        app:layout_constraintTop_toBottomOf="@+id/smthElse"
         android:layout_width="wrap_content"
         android:layout_margin="10dp"
         android:text="Add member"
@@ -28,7 +28,7 @@
         android:layout_height="wrap_content" />
 
     <Button
-        app:layout_constraintTop_toBottomOf="@+id/createMeetingUsersRecyclerView"
+        app:layout_constraintTop_toBottomOf="@+id/smthElse"
         android:layout_width="wrap_content"
         android:layout_margin="10dp"
         android:text="Add notes"

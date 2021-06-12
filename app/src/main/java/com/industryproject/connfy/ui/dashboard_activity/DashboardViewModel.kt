@@ -51,6 +51,17 @@ class DashboardViewModel @Inject constructor(
         }
     }
 
+    fun deleteContact(contactUid: String) = viewModelScope.launch {
+        contactsRepository.deleteContact(contactUid).let {
+            if (it.isSuccessful){
+                _contacts.postValue(it.body())
+            }else{
+                Log.d("retrofit", it.message())
+                Log.d("retrofit", it.code().toString())
+            }
+        }
+    }
+
     fun getMainUserInfo()  = viewModelScope.launch {
         userRepository.getMainUserInfo().let {
             if (it.isSuccessful){
