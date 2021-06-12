@@ -216,13 +216,12 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
 
             }
 
-            R.id.nav_fitness_tracker -> {
-                //model.getMeetings()
-                model.deleteMeeting("sOrAKfGYLnmtgaAyvGrz");
-                //model.updateMeeting("Mts2gIncb7OsAzlhKUz3");
-            }
+//            R.id.nav_fitness_tracker -> {
+//                //model.getMeetings()
+//                model.updateMeeting("9GHGOcViNC2XugFixIbf");
+//                //model.updateMeeting("Mts2gIncb7OsAzlhKUz3");
+//            }
         }
-
         return true
     }
 }
