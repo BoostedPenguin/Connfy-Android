@@ -17,29 +17,8 @@ class AuthViewModel @Inject constructor(
     private val userRepository: UserRepository
 ) : ViewModel() {
 
-    private val _contacts =
-        MutableLiveData<UserResponse>()
-
-    val contacts : LiveData<UserResponse>
-            get() = _contacts
 
     val onCreationComplete = MutableLiveData<Boolean>(false)
-
-    init {
-//        getEmployees()
-    }
-
-
-    fun getContacts()  = viewModelScope.launch {
-        userRepository.getContacts().let {
-            if (it.isSuccessful){
-                _contacts.postValue(it.body())
-            }else{
-                Log.d("retrofit", it.message())
-                Log.d("retrofit", it.code().toString())
-            }
-        }
-    }
 
     fun createUserInDBGoogle(provider: String) = viewModelScope.launch {
         userRepository.createUserInDB(provider).let {

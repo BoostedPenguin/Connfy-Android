@@ -50,9 +50,14 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
 
         setupDrawers()
 
-        model.getContacts()
-        model.getMainUserInfo()
+        // Store http data in viewmodel
+        getDataOnStart()
 
+        // Initiate observers
+        initObservers()
+    }
+
+    private fun initObservers() {
         model.contacts.observe(this, Observer {
             it?.data?.let { it1 ->
                 adapter.setContacts(it1)
@@ -68,7 +73,11 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
                 headerLayout.findViewById<TextView>(R.id.leftDrawerPersonEmail).text = auth.currentUser?.email
             }
         })
+    }
 
+    private fun getDataOnStart() {
+        model.getContacts()
+        model.getMainUserInfo()
     }
 
     private fun setupDrawers() {

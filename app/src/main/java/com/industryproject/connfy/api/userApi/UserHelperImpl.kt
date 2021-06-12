@@ -1,4 +1,4 @@
-package com.industryproject.connfy.api
+package com.industryproject.connfy.api.userApi
 
 import android.util.Log
 import androidx.annotation.WorkerThread
@@ -6,12 +6,9 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GetTokenResult
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import com.google.gson.JsonObject
 import com.industryproject.connfy.models.SelfUser
 import com.industryproject.connfy.models.UserResponse
-import okhttp3.ResponseBody
 import retrofit2.Response
-import retrofit2.http.Header
 import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -21,8 +18,6 @@ class UserHelperImpl @Inject constructor(
 ) : UserHelper {
 
 
-    override suspend fun getUsers(): Response<UserResponse> = userService.getUsers()
-    override suspend fun getUserContacts(): Response<UserResponse> = userService.getUserContacts("Bearer ".plus(getTokenResult()?.token!!))
     override suspend fun createUserInDB(provider: String): Response<UserResponse> = userService.createUserInDB("Bearer ".plus(getTokenResult()?.token!!), provider)
     override suspend fun createUserInDB(provider: String, name: String): Response<UserResponse> = userService.createUserInDB("Bearer ".plus(getTokenResult()?.token!!), provider, name)
 

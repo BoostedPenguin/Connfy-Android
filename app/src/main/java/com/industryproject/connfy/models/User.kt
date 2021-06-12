@@ -28,3 +28,7 @@ data class UserResponse(
 data class SelfUser(
     val data: User,
 )
+
+data class ContactsResponse(
+        val data: List<User>,
+)

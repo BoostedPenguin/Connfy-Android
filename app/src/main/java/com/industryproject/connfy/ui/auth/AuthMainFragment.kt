@@ -62,7 +62,7 @@ class AuthMainFragment : Fragment() {
         }
 
         view.findViewById<Button>(R.id.buttonSignOutlook).setOnClickListener {
-            model.getContacts()
+
         }
 
         model.onCreationComplete.observe(viewLifecycleOwner, Observer {
