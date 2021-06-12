@@ -215,6 +215,12 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
                 builder.show()
 
             }
+
+            R.id.nav_fitness_tracker -> {
+                //model.getMeetings()
+                model.deleteMeeting("sOrAKfGYLnmtgaAyvGrz");
+                //model.updateMeeting("Mts2gIncb7OsAzlhKUz3");
+            }
         }
 
         return true

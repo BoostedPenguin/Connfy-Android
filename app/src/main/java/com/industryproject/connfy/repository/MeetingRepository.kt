@@ -1,6 +1,7 @@
 package com.industryproject.connfy.repository
 
-import com.industryproject.connfy.api.MeetingHelper
+import com.industryproject.connfy.api.meetingsApi.MeetingHelper
+import com.industryproject.connfy.models.MeetingRequest
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -8,9 +9,9 @@ import javax.inject.Singleton
 class MeetingRepository @Inject constructor(private val meetingHelper: MeetingHelper){
 
     suspend fun getMeetings() = meetingHelper.getMeetings()
-    suspend fun getMeetingByUid() = meetingHelper.getMeetingByUid()
-    suspend fun createMeeting() = meetingHelper.createMeeting()
-    suspend fun updateMeeting() = meetingHelper.updateMeeting()
-    suspend fun deleteMeeting() = meetingHelper.deleteMeeting()
+    suspend fun getMeetingByUid(uid: String) = meetingHelper.getMeetingByUid(uid)
+    suspend fun createMeeting(request: MeetingRequest) = meetingHelper.createMeeting(request)
+    suspend fun updateMeeting(uid: String, request: MeetingRequest) = meetingHelper.updateMeeting(uid, request)
+    suspend fun deleteMeeting(uid: String) = meetingHelper.deleteMeeting(uid)
 
 }

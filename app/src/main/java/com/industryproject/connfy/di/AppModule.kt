@@ -2,9 +2,10 @@ package com.industryproject.connfy.di
 
 import com.google.gson.GsonBuilder
 import com.industryproject.connfy.BuildConfig
-import com.industryproject.connfy.api.UserHelper
-import com.industryproject.connfy.api.UserHelperImpl
-import com.industryproject.connfy.api.UserService
+import com.industryproject.connfy.api.*
+import com.industryproject.connfy.api.meetingsApi.MeetingHelper
+import com.industryproject.connfy.api.meetingsApi.MeetingHelperImpl
+import com.industryproject.connfy.api.meetingsApi.MeetingService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -83,5 +84,13 @@ object AppModule{
     @Provides
     @Singleton
     fun provideUserHelper(apiHelper: UserHelperImpl): UserHelper = apiHelper
+
+    @Provides
+    @Singleton
+    fun provideMeetingService(retrofit: Retrofit) = retrofit.create(MeetingService::class.java)
+
+    @Provides
+    @Singleton
+    fun provideMeetingHelper(apiHelper: MeetingHelperImpl): MeetingHelper = apiHelper
 
 }

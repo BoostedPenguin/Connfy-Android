@@ -6,24 +6,45 @@ data class Meeting(
     @SerializedName("uid")
     val uid: String?,
 
-    @SerializedName("ownerUID")
+    @SerializedName("ownerUid")
     val ownerUid: String?,
 
     @SerializedName("ownerName")
     val ownerName: String?,
 
+    @SerializedName("invitedUsersIds")
+    val invitedUsersIds: ArrayList<String>?,
+
     @SerializedName("invitedUsers")
     val invitedUsers: ArrayList<User>?,
 
     @SerializedName("geoLocation")
-    val geoLocation: List<Double>?,
+    val geoLocation: List<GeoLocation>?,
+
+    @SerializedName("title")
+    val title: String?,
+)
+
+data class GeoLocation(
+        val _latitude: Double,
+        val _longitude: Double
+)
+
+data class MeetingRequest(
+        var ownerName: String,
+        var invitedUsers: List<String>,
+        var geoLocation: List<GeoLocation>,
+        var title: String
 )
 
 data class MeetingResponse(
     val data: List<Meeting>,
-    val status: String?,
 )
 
-data class SelfMeeting(
-    val data: Meeting,
+data class SingleMeetingResponse(
+        val data: Meeting,
+)
+
+data class StringResponse(
+        val data: String,
 )
