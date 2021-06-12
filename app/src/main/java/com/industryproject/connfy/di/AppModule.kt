@@ -8,6 +8,10 @@ import com.industryproject.connfy.api.contactsApi.ContactsService
 import com.industryproject.connfy.api.userApi.UserHelper
 import com.industryproject.connfy.api.userApi.UserHelperImpl
 import com.industryproject.connfy.api.userApi.UserService
+import com.industryproject.connfy.api.*
+import com.industryproject.connfy.api.meetingsApi.MeetingHelper
+import com.industryproject.connfy.api.meetingsApi.MeetingHelperImpl
+import com.industryproject.connfy.api.meetingsApi.MeetingService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -94,4 +98,12 @@ object AppModule{
     @Provides
     @Singleton
     fun provideContactsHelper(apiHelper: ContactsHelperImpl): ContactsHelper = apiHelper
+
+    @Provides
+    @Singleton
+    fun provideMeetingService(retrofit: Retrofit) = retrofit.create(MeetingService::class.java)
+
+    @Provides
+    @Singleton
+    fun provideMeetingHelper(apiHelper: MeetingHelperImpl): MeetingHelper = apiHelper
 }
