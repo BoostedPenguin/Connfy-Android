@@ -41,8 +41,20 @@ class AuthViewModel @Inject constructor(
         }
     }
 
-    fun createUserInDB() = viewModelScope.launch {
-        userRepository.createUserInDB().let {
+    fun createUserInDBGoogle(provider: String) = viewModelScope.launch {
+        userRepository.createUserInDB(provider).let {
+            if (it.isSuccessful){
+                onCreationComplete.value = true
+                Log.d("retrofit", "Added user to firestore repo")
+            }else{
+                Log.d("retrofit", it.message())
+                Log.d("retrofit", it.code().toString())
+            }
+        }
+    }
+
+    fun createUserInDBEmail(provider: String, name: String) = viewModelScope.launch {
+        userRepository.createUserInDB(provider, name).let {
             if (it.isSuccessful){
                 onCreationComplete.value = true
                 Log.d("retrofit", "Added user to firestore repo")

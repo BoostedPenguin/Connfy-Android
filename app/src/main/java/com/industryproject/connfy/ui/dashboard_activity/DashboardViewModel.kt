@@ -26,12 +26,12 @@ class DashboardViewModel @Inject constructor(
     val thisUser = MutableLiveData<SelfUser>()
 
     init {
-        getContacts()
-        getMainUserInfo()
+        //getContacts()
+        //getMainUserInfo()
     }
 
 
-    private fun getContacts()  = viewModelScope.launch {
+    fun getContacts()  = viewModelScope.launch {
         userRepository.getContacts().let {
             if (it.isSuccessful){
                 _contacts.postValue(it.body())
