@@ -113,7 +113,9 @@ class AuthMainFragment : Fragment() {
                         Log.d("mytag", "signInWithCredential:success")
                         val user = auth.currentUser
 
-                        model.createUserInDBGoogle("GOOGLE")
+                        if (user != null) {
+                            model.createUserInDBEmail("GOOGLE", user.displayName?: "")
+                        }
                     } else {
                         // If sign in fails, display a message to the user.
                         Log.w("mytag", "signInWithCredential:failure", task.exception)

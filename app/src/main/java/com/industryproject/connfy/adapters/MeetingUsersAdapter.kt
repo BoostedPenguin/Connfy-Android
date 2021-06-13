@@ -14,6 +14,7 @@ class MeetingUsersAdapter : RecyclerView.Adapter<MeetingUsersAdapter.ContactHold
     // Replace with data model
     private var contacts: List<User> = ArrayList()
     private var contactButtonClickListener: OnContactButtonClickListener? = null
+    private var itemClickListener: OnItemClickListener? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ContactHolder {
         val itemView: View = LayoutInflater.from(parent.context)
@@ -22,18 +23,21 @@ class MeetingUsersAdapter : RecyclerView.Adapter<MeetingUsersAdapter.ContactHold
         return ContactHolder(itemView)
     }
 
-    fun setInvitedUsers(contacts: List<User>) {
-        this.contacts = contacts
+    fun setUserContent(contacts: List<User>, ownerUid: String, ownerName: String) {
+        this.contacts = listOf(User(ownerUid, ownerName, null, null)) + contacts.sortedBy { it.name }
         notifyDataSetChanged()
     }
+
 
 
     override fun onBindViewHolder(holder: ContactHolder, position: Int) {
         val currentContact = contacts[position]
         holder.contact = currentContact
+
+        val prepend: String = if(position == 0) "(Owner) " else ""
         val displayName: String = currentContact.email?: currentContact.name?: ""
 
-        holder.displayUser.text =  displayName
+        holder.displayUser.text = prepend + displayName
     }
 
     override fun getItemCount(): Int {
@@ -46,6 +50,14 @@ class MeetingUsersAdapter : RecyclerView.Adapter<MeetingUsersAdapter.ContactHold
 
     fun setOnContactButtonClickListener(listener: OnContactButtonClickListener?) {
         this.contactButtonClickListener = listener
+    }
+
+    interface OnItemClickListener {
+        fun onContactButtonClick(position: Int, person: User)
+    }
+
+    fun setOnItemClickListener(listener: OnItemClickListener?) {
+        this.itemClickListener = listener
     }
 
     inner class ContactHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -61,6 +73,14 @@ class MeetingUsersAdapter : RecyclerView.Adapter<MeetingUsersAdapter.ContactHold
 
                 if (contactButtonClickListener != null && position != RecyclerView.NO_POSITION) {
                     contactButtonClickListener!!.onContactButtonClick(position, contact)
+                }
+            }
+
+            displayUser.setOnClickListener {
+                val position = adapterPosition
+
+                if( itemClickListener != null && position != RecyclerView.NO_POSITION) {
+                    itemClickListener!!.onContactButtonClick(position, contact)
                 }
             }
         }

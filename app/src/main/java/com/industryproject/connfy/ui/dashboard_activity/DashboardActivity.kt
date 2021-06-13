@@ -59,8 +59,8 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
 
     private fun initObservers() {
         model.contacts.observe(this, Observer {
-            it?.data?.let { it1 ->
-                adapter.setContacts(it1)
+            if(it?.data != null) {
+                adapter.setContacts(it.data)
             }
         })
 
@@ -148,6 +148,7 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
                 val bundle = bundleOf(
                         Pair("PERSON_NAME", person.name),
                         Pair("PERSON_EMAIL", person.email),
+                        Pair("PERSON_UID", person.uid)
                 )
                 findNavController(R.id.nav_host_fragment).navigate(R.id.nav_profile_view, bundle)
             }

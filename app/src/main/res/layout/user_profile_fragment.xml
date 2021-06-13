@@ -67,6 +67,7 @@
         android:layout_marginTop="20dp"
         android:layout_marginHorizontal="40dp"
         android:layout_width="match_parent"
+        android:textColor="@color/black"
         android:hint="Name"
         android:padding="15dp"
         android:background="@drawable/button_effect"
@@ -75,6 +76,7 @@
 
     <TextView
         android:id="@+id/profileEmail"
+        android:visibility="invisible"
         android:layout_marginTop="20dp"
         android:layout_marginHorizontal="40dp"
         android:layout_width="match_parent"

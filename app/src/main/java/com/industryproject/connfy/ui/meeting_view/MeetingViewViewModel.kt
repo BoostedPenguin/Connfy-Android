@@ -13,29 +13,23 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MeetingViewViewModel @Inject constructor(private val meetingRepository: MeetingRepository) : ViewModel() {
-    private val _meetings = MutableLiveData<MeetingResponse>();
-    val meetings: LiveData<MeetingResponse>
-        get() = _meetings
-    init {
-        getMeetings()
-    }
 
-    private fun getMeetings() = viewModelScope.launch{
-        meetingRepository.getMeetings().let {
-            if (it.isSuccessful){
-                _meetings.postValue(it.body())
+
+    val currentMeeting =
+            MutableLiveData<SingleMeetingResponse>()
+
+    fun getMeeting(uid:String) = viewModelScope.launch{
+        meetingRepository.getMeetingByUid(uid).let {
+            if(it.isSuccessful){
+                currentMeeting.postValue(it.body())
                 Log.d("success", it.body().toString())
             }else{
                 Log.d("retrofit", it.message())
                 Log.d("retrofit", it.code().toString())
             }
         }
-}
-    private fun getMeeting(uid:String) = viewModelScope.launch{
-        meetingRepository.getMeetingByUid(uid).let {
-
-        }
     }
+
     private fun createMeetings(meeting: Meeting){}
     private fun updateMeeting(uid:String){}
     private fun deleteMeeting(uid:String){}

@@ -16,25 +16,37 @@ data class Meeting(
     val invitedUsersIds: ArrayList<String>?,
 
     @SerializedName("invitedUsers")
-    val invitedUsers: ArrayList<User>?,
+    val invitedUsers: List<User>?,
 
     @SerializedName("geoLocation")
     val geoLocation: List<GeoLocation>?,
 
     @SerializedName("title")
     val title: String?,
+
+    @SerializedName("isOutlook")
+    val isOutlook: Boolean?,
+
+    @SerializedName("date")
+    val date: FBDate?,
+)
+
+data class FBDate(
+        var _seconds: Long,
+        var _nanoseconds: Long
 )
 
 data class GeoLocation(
-        val _latitude: Double,
-        val _longitude: Double
+        var _latitude: Double,
+        var _longitude: Double
 )
 
 data class MeetingRequest(
         var ownerName: String,
         var invitedUsers: List<String>,
         var geoLocation: List<GeoLocation>,
-        var title: String
+        var title: String,
+        var isOutlook: Boolean
 )
 
 data class MeetingResponse(
