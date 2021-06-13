@@ -12,7 +12,9 @@ import com.industryproject.connfy.models.User
 class MeetingUsersAdapter : RecyclerView.Adapter<MeetingUsersAdapter.ContactHolder>() {
 
     // Replace with data model
-    private var contacts: List<User> = ArrayList()
+    private var userUID: String = ""
+    private var invitedUsers: List<User> = ArrayList()
+    private var contacts: MutableList<User> = mutableListOf()
     private var contactButtonClickListener: OnContactButtonClickListener? = null
     private var itemClickListener: OnItemClickListener? = null
 
@@ -23,25 +25,40 @@ class MeetingUsersAdapter : RecyclerView.Adapter<MeetingUsersAdapter.ContactHold
         return ContactHolder(itemView)
     }
 
-    fun setUserContent(contacts: List<User>, ownerUid: String, ownerName: String) {
-        this.contacts = listOf(User(ownerUid, ownerName, null, null)) + contacts.sortedBy { it.name }
+    fun setUserContent(invitedUsers: List<User>, ownerUid: String, ownerName: String, contacts: List<User>, userUID: String) {
+        this.invitedUsers = listOf(User(ownerUid, ownerName, null, null)) + invitedUsers.sortedBy { it.name }
+        this.contacts = contacts.toMutableList()
+        this.userUID = userUID
+        notifyDataSetChanged()
+    }
+
+    fun addContact(userUID: String) {
+        contacts.add(User(userUID, null, null, null))
         notifyDataSetChanged()
     }
 
 
 
     override fun onBindViewHolder(holder: ContactHolder, position: Int) {
-        val currentContact = contacts[position]
+        val currentContact = invitedUsers[position]
         holder.contact = currentContact
 
         val prepend: String = if(position == 0) "(Owner) " else ""
         val displayName: String = currentContact.email?: currentContact.name?: ""
 
+        val isFriend = contacts.any {
+            it.uid == currentContact.uid
+        }
+        if(isFriend || currentContact.uid == userUID) {
+            holder.addUser.visibility = View.INVISIBLE
+            holder.addUser.isEnabled = false
+        }
+
         holder.displayUser.text = prepend + displayName
     }
 
     override fun getItemCount(): Int {
-        return contacts.size
+        return invitedUsers.size
     }
 
     interface OnContactButtonClickListener {

@@ -38,7 +38,7 @@ class MeetingViewFragment : Fragment() {
     private var locationPermissionGranted: Boolean = false
     private lateinit var contactsAdapter: MeetingUsersAdapter
 
-    private val model: MeetingViewViewModel by activityViewModels()
+    private val model: DashboardViewModel by activityViewModels()
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -91,7 +91,8 @@ class MeetingViewFragment : Fragment() {
 
         contactsAdapter.setOnContactButtonClickListener(object: MeetingUsersAdapter.OnContactButtonClickListener {
             override fun onContactButtonClick(position: Int, person: User) {
-                TODO("Not yet implemented")
+                person.uid?.let { model.addContact(it) }
+                person.uid?.let { contactsAdapter.addContact(it) }
             }
         })
 
@@ -110,8 +111,8 @@ class MeetingViewFragment : Fragment() {
 
         model.currentMeeting.observe(viewLifecycleOwner, Observer { it ->
             it?.data?.let {it1 ->
-                if(it1.invitedUsers != null && it1.ownerName != null && it1.ownerUid != null) {
-                    contactsAdapter.setUserContent(it1.invitedUsers, it1.ownerUid, it1. ownerName)
+                if(it1.invitedUsers != null && it1.ownerName != null && it1.ownerUid != null && model.contacts.value?.data != null && model.thisUser.value?.data != null) {
+                    contactsAdapter.setUserContent(it1.invitedUsers, it1.ownerUid, it1. ownerName, model.contacts.value!!.data, model.thisUser.value?.data?.uid!!)
                 }
             }
         })

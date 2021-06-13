@@ -15,7 +15,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.industryproject.connfy.R
 import com.industryproject.connfy.ui.dashboard_activity.DashboardViewModel
-import com.industryproject.connfy.ui.dashboard_activity.SelectedPersonStatus
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -36,21 +35,21 @@ class UserProfileFragment : Fragment() {
         val button = requireView().findViewById<Button>(R.id.profileButtonAdd) as ImageButton
 
 
-        model.selectedPersonStatus.observe(viewLifecycleOwner, Observer {
-            when(model.selectedPersonStatus.value) {
-                SelectedPersonStatus.InContacts -> {
-                    val s = 5
+        model.contacts.observe(viewLifecycleOwner, Observer {
+
+            val containsFriend = it.data.any { itUser ->
+                itUser.uid == model.selectedPersonProfile.value?.uid
+            }
+
+            when {
+                model.selectedPersonProfile.value?.uid == model.thisUser.value?.data?.uid -> {
+                    button.visibility = View.INVISIBLE
+                }
+                containsFriend -> {
                     button.setImageResource(R.drawable.ic_baseline_person_add_disabled_24)
                 }
-                SelectedPersonStatus.NotInContacts -> {
-                    val s = 5
-
+                else -> {
                     button.setImageResource(R.drawable.ic_baseline_person_add_24)
-                }
-                SelectedPersonStatus.IsUser -> {
-                    val s = 5
-
-                    button.visibility = View.INVISIBLE
                 }
             }
         })

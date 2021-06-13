@@ -14,10 +14,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-enum class SelectedPersonStatus {
-    InContacts, NotInContacts, IsUser
-}
-
 
 @HiltViewModel
 class DashboardViewModel @Inject constructor(
@@ -34,8 +30,6 @@ class DashboardViewModel @Inject constructor(
     val selectedPersonProfile
             = MutableLiveData<User>(User(null, null, null, null))
 
-    val selectedPersonStatus
-            = MutableLiveData<SelectedPersonStatus>()
 
     val meetings =
             MutableLiveData<MeetingResponse>();
@@ -55,12 +49,11 @@ class DashboardViewModel @Inject constructor(
             it.email = email
             it.name = name
             it.uid = uid
-
-            selectedPersonChecker()
         }
     }
 
-    private fun selectedPersonChecker() {
+
+    fun handleContactAction() {
 
         val containsFriend = contacts.value?.data?.any { itUser ->
             itUser.uid == selectedPersonProfile.value?.uid
@@ -68,24 +61,14 @@ class DashboardViewModel @Inject constructor(
 
         when {
             selectedPersonProfile.value?.uid == thisUser.value?.data?.uid -> {
-                selectedPersonStatus.value = SelectedPersonStatus.IsUser
+                Log.d("Contacts","Can't take action for same user")
             }
             containsFriend == true -> {
-                selectedPersonStatus.value = SelectedPersonStatus.InContacts
+                selectedPersonProfile.value?.uid?.let { deleteContact(it) }
             }
             else -> {
-                selectedPersonStatus.value = SelectedPersonStatus.NotInContacts
+                selectedPersonProfile.value?.uid?.let { addContact(it) }
             }
-        }
-    }
-
-
-
-    fun handleContactAction() {
-        when(selectedPersonStatus.value) {
-            SelectedPersonStatus.InContacts -> selectedPersonProfile.value?.uid?.let { deleteContact(it) }
-            SelectedPersonStatus.NotInContacts -> selectedPersonProfile.value?.uid?.let { addContact(it) }
-            SelectedPersonStatus.IsUser -> Log.d("Contacts","Can't take action for same user")
         }
     }
 
@@ -105,11 +88,10 @@ class DashboardViewModel @Inject constructor(
         }
     }
 
-    private fun addContact(contactUid: String) = viewModelScope.launch {
+    fun addContact(contactUid: String) = viewModelScope.launch {
         contactsRepository.addContact(contactUid).let {
             if (it.isSuccessful){
                 contacts.value = it.body()
-                selectedPersonChecker()
             }else{
                 Log.d("retrofit", it.message())
                 Log.d("retrofit", it.code().toString())
@@ -126,7 +108,6 @@ class DashboardViewModel @Inject constructor(
                 else {
                     contacts.postValue(it.body())
                 }
-                selectedPersonChecker()
             }else{
                 Log.d("retrofit", it.message())
                 Log.d("retrofit", it.code().toString())
