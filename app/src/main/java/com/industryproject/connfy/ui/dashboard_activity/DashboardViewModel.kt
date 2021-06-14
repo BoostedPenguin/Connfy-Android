@@ -18,8 +18,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DashboardViewModel @Inject constructor(
-    private val userRepository: UserRepository,
-    private val meetingRepository: MeetingRepository
+        private val userRepository: UserRepository,
+        private val meetingRepository: MeetingRepository
 ) : ViewModel() {
 
     private val _contacts =
@@ -75,7 +75,7 @@ class DashboardViewModel @Inject constructor(
             }
         }
     }
-    fun getMeeting(uid:String) = viewModelScope.launch{
+    fun getMeeting(uid: String) = viewModelScope.launch{
         meetingRepository.getMeetingByUid(uid).let {
             if(it.isSuccessful){
                 currentMeeting.postValue(it.body())
@@ -100,7 +100,7 @@ class DashboardViewModel @Inject constructor(
             }
         }
     }
-    fun updateMeeting(uid:String) = viewModelScope.launch{
+    fun updateMeeting(uid: String) = viewModelScope.launch{
         val invitedUsersIds = mutableListOf<String>("OkBrFl1snXXoPUuuyka99Ol8Rim2");
         val geoLocation = mutableListOf<GeoLocation>(GeoLocation(54.6466, 51.6479));
         val req = MeetingRequest("Azis", invitedUsersIds, geoLocation, "Title", 1724184000);
@@ -114,7 +114,7 @@ class DashboardViewModel @Inject constructor(
             }
         }
     }
-    fun deleteMeeting(uid:String) = viewModelScope.launch{
+    fun deleteMeeting(uid: String) = viewModelScope.launch{
         meetingRepository.deleteMeeting(uid).let {
             if(it.isSuccessful){
                 Log.d("success", it.body().toString())
@@ -125,17 +125,18 @@ class DashboardViewModel @Inject constructor(
         }
     }
 
-    fun secondsToDate(seconds: String): Date? {
+    fun secondsToDate(seconds: String): String? {
         try {
             val sdf = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.ENGLISH)
             val secondsToLong: Long? = seconds.toLongOrNull();
             return if(secondsToLong != null){
-                val netDate = Date(secondsToLong * 1000 * 1000);
-                sdf.format(netDate);
-                Log.d("date: ",  netDate.toString());
-                netDate;
+                val calendar = Calendar.getInstance()
+                calendar.timeInMillis = secondsToLong
+                val time = sdf.format(calendar.time)
+                Log.d("date: ", time.toString());
+                time;
             }else{
-                Log.d("date: ",  "FormatError");
+                Log.d("date: ", "FormatError");
                 null;
             }
         }
@@ -152,7 +153,7 @@ class DashboardViewModel @Inject constructor(
             if (dateToSeconds == 0.toLong()){
                null
             }else{
-                Log.d("date: ",  dateToSeconds.toString());
+                Log.d("date: ", dateToSeconds.toString());
                 dateToSeconds
             }
 

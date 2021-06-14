@@ -220,7 +220,7 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
             }
 
             R.id.nav_fitness_tracker -> {
-                model.createMeeting()
+                model.secondsToDate("1624184972000")
                 //model.getMeetings()
                 //model.updateMeeting("9GHGOcViNC2XugFixIbf");
                 //model.updateMeeting("Mts2gIncb7OsAzlhKUz3");
