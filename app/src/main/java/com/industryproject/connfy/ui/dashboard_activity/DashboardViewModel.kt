@@ -89,7 +89,7 @@ class DashboardViewModel @Inject constructor(
     fun createMeeting() = viewModelScope.launch{
         val invitedUsersIds = mutableListOf<String>("OkBrFl1snXXoPUuuyka99Ol8Rim2", "0C2j6Vno59ZtjXUtdYhrrE1iyFz2");
         val geoLocation = mutableListOf<GeoLocation>(GeoLocation(54.6476, 51.6479));
-        val req = MeetingRequest("Azis", invitedUsersIds, geoLocation, "Title", 1624184972);
+        val req = MeetingRequest("Azis", invitedUsersIds, geoLocation, "Title", 1624184972000);
         meetingRepository.createMeeting(req).let {
             if(it.isSuccessful){
                 //currentMeeting.postValue(it.body())
@@ -103,7 +103,7 @@ class DashboardViewModel @Inject constructor(
     fun updateMeeting(uid:String) = viewModelScope.launch{
         val invitedUsersIds = mutableListOf<String>("OkBrFl1snXXoPUuuyka99Ol8Rim2");
         val geoLocation = mutableListOf<GeoLocation>(GeoLocation(54.6466, 51.6479));
-        val req = MeetingRequest("Azis", invitedUsersIds, geoLocation, "Title", 1624184978);
+        val req = MeetingRequest("Azis", invitedUsersIds, geoLocation, "Title", 1724184000);
         meetingRepository.updateMeeting(uid, req).let {
             if(it.isSuccessful){
                 currentMeeting.postValue(it.body())
@@ -130,7 +130,7 @@ class DashboardViewModel @Inject constructor(
             val sdf = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.ENGLISH)
             val secondsToLong: Long? = seconds.toLongOrNull();
             return if(secondsToLong != null){
-                val netDate = Date(secondsToLong * 1000);
+                val netDate = Date(secondsToLong * 1000 * 1000);
                 sdf.format(netDate);
                 Log.d("date: ",  netDate.toString());
                 netDate;
@@ -148,7 +148,7 @@ class DashboardViewModel @Inject constructor(
     @RequiresApi(Build.VERSION_CODES.O)
     fun dateToSeconds(date: Date?): Long? {
         return try {
-            val dateToSeconds: Long = date?.toInstant()?.epochSecond ?: 0;
+            val dateToSeconds: Long = date?.toInstant()?.toEpochMilli() ?: 0;
             if (dateToSeconds == 0.toLong()){
                null
             }else{
