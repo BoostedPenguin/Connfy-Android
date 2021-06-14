@@ -1,6 +1,7 @@
 package com.industryproject.connfy.ui.dashboard_activity
 
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
@@ -29,6 +30,8 @@ import com.industryproject.connfy.R
 import com.industryproject.connfy.adapters.ContactRecyclerViewAdapter
 import com.industryproject.connfy.models.User
 import dagger.hilt.android.AndroidEntryPoint
+import java.text.SimpleDateFormat
+import java.util.*
 
 @AndroidEntryPoint
 class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -216,11 +219,12 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
 
             }
 
-//            R.id.nav_fitness_tracker -> {
-//                //model.getMeetings()
-//                model.updateMeeting("9GHGOcViNC2XugFixIbf");
-//                //model.updateMeeting("Mts2gIncb7OsAzlhKUz3");
-//            }
+            R.id.nav_fitness_tracker -> {
+                model.dateToSeconds(model.secondsToDate("1624184972"))
+                //model.getMeetings()
+                //model.updateMeeting("9GHGOcViNC2XugFixIbf");
+                //model.updateMeeting("Mts2gIncb7OsAzlhKUz3");
+            }
         }
         return true
     }

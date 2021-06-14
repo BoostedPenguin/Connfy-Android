@@ -1,6 +1,8 @@
 package com.industryproject.connfy.ui.dashboard_activity
 
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,6 +12,8 @@ import com.industryproject.connfy.repository.MeetingRepository
 import com.industryproject.connfy.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -118,6 +122,44 @@ class DashboardViewModel @Inject constructor(
                 Log.d("retrofit", it.message())
                 Log.d("retrofit", it.code().toString())
             }
+        }
+    }
+
+    fun secondsToDate(seconds: String): Date? {
+        try {
+            val sdf = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.ENGLISH)
+            val secondsToLong: Long? = seconds.toLongOrNull();
+            return if(secondsToLong != null){
+                val netDate = Date(secondsToLong * 1000);
+                sdf.format(netDate);
+                Log.d("date: ",  netDate.toString());
+                netDate;
+            }else{
+                Log.d("date: ",  "FormatError");
+                null;
+            }
+        }
+        catch (e: Exception) {
+            e.message?.let { Log.d("date: ", it) };
+            return null;
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun dateToSeconds(date: Date?): Long? {
+        return try {
+            val dateToSeconds: Long = date?.toInstant()?.epochSecond ?: 0;
+            if (dateToSeconds == 0.toLong()){
+               null
+            }else{
+                Log.d("date: ",  dateToSeconds.toString());
+                dateToSeconds
+            }
+
+        }
+        catch (e: Exception) {
+            e.message?.let { Log.d("date: ", it) };
+            null;
         }
     }
 }
