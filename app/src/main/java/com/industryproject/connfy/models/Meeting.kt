@@ -13,7 +13,7 @@ data class Meeting(
     val ownerName: String?,
 
     @SerializedName("invitedUsersIds")
-    val invitedUsersIds: ArrayList<String>?,
+    var invitedUsersIds: List<String>?,
 
     @SerializedName("invitedUsers")
     val invitedUsers: List<User>?,

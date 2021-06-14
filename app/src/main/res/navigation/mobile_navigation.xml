@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_nav_home_to_nav_meeting_view"
             app:destination="@id/nav_meeting_view" />
+        <action
+            android:id="@+id/action_nav_home_to_nav_create_meting"
+            app:destination="@id/nav_create_meting" />
     </fragment>
 
     <fragment
@@ -33,10 +36,16 @@
         android:name="com.industryproject.connfy.ui.profile.UserProfileFragment"
         android:label="Profile view"
         tools:layout="@layout/user_profile_fragment" >
-        <argument
-            android:name="personData"
-            app:argType="string"
-            android:defaultValue="GJOHO"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_create_meting"
+        android:name="com.industryproject.connfy.ui.create_meeting.CreateMeeting"
+        android:label="Create meeting"
+        tools:layout="@layout/create_meeting" >
+        <action
+            android:id="@+id/action_nav_create_meting_to_nav_profile_view"
+            app:destination="@id/nav_profile_view" />
     </fragment>
 
 </navigation>

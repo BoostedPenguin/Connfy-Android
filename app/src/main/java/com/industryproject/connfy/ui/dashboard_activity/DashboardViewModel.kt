@@ -37,6 +37,9 @@ class DashboardViewModel @Inject constructor(
     val currentMeeting =
             MutableLiveData<SingleMeetingResponse>()
 
+    val creatingMeeting = Meeting(null, null, null, null, null, null, null, null, null)
+
+
     val deletedMeeting =
             MutableLiveData<StringResponse>()
 
@@ -154,14 +157,17 @@ class DashboardViewModel @Inject constructor(
         }
     }
     fun createMeeting() = viewModelScope.launch{
-        val invitedUsersIds = mutableListOf<String>("OkBrFl1snXXoPUuuyka99Ol8Rim2", "0C2j6Vno59ZtjXUtdYhrrE1iyFz2");
+        val invitedUsersIds = mutableListOf<String>("Z0WOa94yEQSKw4WS7vWu9LonQW83", "OkBrFl1snXXoPUuuyka99Ol8Rim2");
         val geoLocation = mutableListOf<GeoLocation>(GeoLocation(54.6476, 51.6479));
 
-        val req = MeetingRequest("Azis", invitedUsersIds, geoLocation, "Title", false);
+        val req = MeetingRequest("Boosted Penguin", invitedUsersIds, geoLocation, "Some title", false);
 
         meetingRepository.createMeeting(req).let {
             if(it.isSuccessful){
                 //currentMeeting.postValue(it.body())
+
+
+                getMeetings()
                 Log.d("success", it.body().toString())
             }else{
                 Log.d("retrofit", it.message())

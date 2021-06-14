@@ -2,12 +2,13 @@ package com.industryproject.connfy.ui.meeting_view
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import android.widget.Button
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
@@ -15,7 +16,6 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -26,7 +26,6 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.industryproject.connfy.R
-import com.industryproject.connfy.adapters.ContactRecyclerViewAdapter
 import com.industryproject.connfy.adapters.MeetingUsersAdapter
 import com.industryproject.connfy.models.User
 import com.industryproject.connfy.ui.dashboard_activity.DashboardViewModel
@@ -62,6 +61,56 @@ class MeetingViewFragment : Fragment() {
 
     }
 
+    private fun showDialog(){
+        // TODO
+        lateinit var dialog: AlertDialog
+
+
+        val choices = mutableListOf<String>()
+        val checked = mutableListOf<Boolean>()
+        for(contact in model.contacts.value?.data!!) {
+
+            choices.add(contact.name?: "Unknown")
+
+            if(model.currentMeeting.value?.data?.invitedUsers?.any {it -> it.uid == contact.uid} == true) {
+                checked.add(true)
+            }
+            else {
+                checked.add(false)
+            }
+        }
+
+        val choicesArray: Array<String> = choices.toTypedArray()
+        val checkedArray: Array<Boolean> = checked.toTypedArray()
+
+        val builder = AlertDialog.Builder(context)
+
+        builder.setTitle("Choose members")
+
+        builder.setMultiChoiceItems(choicesArray, checkedArray.toBooleanArray() ) { dialog, which, isChecked->
+            checkedArray[which] = isChecked
+
+            val selected = choicesArray[which]
+            Toast.makeText(context,
+                    "$selected $isChecked", Toast.LENGTH_SHORT).show();
+        }
+
+        builder.setPositiveButton("OK") { _, _ ->
+            var queueUsersToAdd = mutableListOf<String>()
+            for (i in choicesArray.indices) {
+                val checked = checkedArray[i]
+
+                if (checked) {
+                    model.currentMeeting.value?.data?.invitedUsers?.get(i)?.uid?.let { queueUsersToAdd.add(it) }
+                }
+            }
+        }
+
+        dialog = builder.create()
+
+        dialog.show()
+    }
+
 
     @SuppressLint("MissingPermission")
     private val callback = OnMapReadyCallback { googleMap ->
@@ -74,7 +123,7 @@ class MeetingViewFragment : Fragment() {
     }
 
     private fun initUserRecyclerView() {
-        val recyclerView: RecyclerView = requireView().findViewById(R.id.createMeetingUsersRecyclerView)
+        val recyclerView: RecyclerView = requireView().findViewById(R.id.meetingUsersRecyclerView)
         contactsAdapter = MeetingUsersAdapter()
 
         recyclerView.adapter = contactsAdapter
@@ -105,9 +154,13 @@ class MeetingViewFragment : Fragment() {
                         Pair("PERSON_UID", person.uid)
                 )
                 findNavController().navigate(R.id.nav_profile_view, bundle)
-
             }
         })
+
+        requireView().findViewById<Button>(R.id.meeting_add_to_meeting).setOnClickListener {
+            //TODO
+            //showDialog()
+        }
 
         model.currentMeeting.observe(viewLifecycleOwner, Observer { it ->
             it?.data?.let {it1 ->
