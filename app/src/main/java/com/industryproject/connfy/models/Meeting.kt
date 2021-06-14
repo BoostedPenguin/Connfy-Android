@@ -1,28 +1,32 @@
 package com.industryproject.connfy.models
 
 import com.google.gson.annotations.SerializedName
+import kotlin.collections.ArrayList
 
 data class Meeting(
-    @SerializedName("uid")
+        @SerializedName("uid")
     val uid: String?,
 
-    @SerializedName("ownerUid")
+        @SerializedName("ownerUid")
     val ownerUid: String?,
 
-    @SerializedName("ownerName")
+        @SerializedName("ownerName")
     val ownerName: String?,
 
-    @SerializedName("invitedUsersIds")
+        @SerializedName("invitedUsersIds")
     val invitedUsersIds: ArrayList<String>?,
 
-    @SerializedName("invitedUsers")
+        @SerializedName("invitedUsers")
     val invitedUsers: ArrayList<User>?,
 
-    @SerializedName("geoLocation")
+        @SerializedName("geoLocation")
     val geoLocation: List<GeoLocation>?,
 
-    @SerializedName("title")
+        @SerializedName("title")
     val title: String?,
+
+        @SerializedName("date")
+    val date: Long?,
 )
 
 data class GeoLocation(
@@ -34,7 +38,8 @@ data class MeetingRequest(
         var ownerName: String,
         var invitedUsers: List<String>,
         var geoLocation: List<GeoLocation>,
-        var title: String
+        var title: String,
+        var date: Long,
 )
 
 data class MeetingResponse(

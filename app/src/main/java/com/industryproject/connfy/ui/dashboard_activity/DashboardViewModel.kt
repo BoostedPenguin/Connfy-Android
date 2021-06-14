@@ -89,7 +89,7 @@ class DashboardViewModel @Inject constructor(
     fun createMeeting() = viewModelScope.launch{
         val invitedUsersIds = mutableListOf<String>("OkBrFl1snXXoPUuuyka99Ol8Rim2", "0C2j6Vno59ZtjXUtdYhrrE1iyFz2");
         val geoLocation = mutableListOf<GeoLocation>(GeoLocation(54.6476, 51.6479));
-        val req = MeetingRequest("Azis", invitedUsersIds, geoLocation, "Title");
+        val req = MeetingRequest("Azis", invitedUsersIds, geoLocation, "Title", 1624184972);
         meetingRepository.createMeeting(req).let {
             if(it.isSuccessful){
                 //currentMeeting.postValue(it.body())
@@ -103,7 +103,7 @@ class DashboardViewModel @Inject constructor(
     fun updateMeeting(uid:String) = viewModelScope.launch{
         val invitedUsersIds = mutableListOf<String>("OkBrFl1snXXoPUuuyka99Ol8Rim2");
         val geoLocation = mutableListOf<GeoLocation>(GeoLocation(54.6466, 51.6479));
-        val req = MeetingRequest("Azis", invitedUsersIds, geoLocation, "Title");
+        val req = MeetingRequest("Azis", invitedUsersIds, geoLocation, "Title", 1624184978);
         meetingRepository.updateMeeting(uid, req).let {
             if(it.isSuccessful){
                 currentMeeting.postValue(it.body())
