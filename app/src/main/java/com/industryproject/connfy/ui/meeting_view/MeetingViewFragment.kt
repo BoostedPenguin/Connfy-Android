@@ -3,16 +3,19 @@ package com.industryproject.connfy.ui.meeting_view
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.AlertDialog
+import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
+import androidx.core.view.allViews
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -49,16 +52,61 @@ class MeetingViewFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         checkLocationPermissions()
 
-        // Get meeting details
-        model.getMeeting(arguments?.getString("MEETING_ID")!!)
+
 
         //google map initialization
         val mapFragment = childFragmentManager.findFragmentById(R.id.mapView) as SupportMapFragment?
         mapFragment?.getMapAsync(callback)
 
+
+
         // Invited Users adapter
         initUserRecyclerView()
+    }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        // Get meeting details
+        disableOnStart(view)
+        model.getMeeting(arguments?.getString("MEETING_ID")!!)
+
+        model.currentMeeting.observe(viewLifecycleOwner, Observer {
+            model.currentMeeting.value?.data?.geoLocation
+            if(it?.data?.title != null) {
+                enableOnReady(requireView())
+            }
+        })
+    }
+
+    private fun disableOnStart(view: View) {
+        val s = view.allViews
+
+        s.iterator().forEach {
+            if(it.id == R.id.progressBar_cyclic || it.id == R.id.meeting_view_constraint) {
+                it.visibility = View.VISIBLE
+            }
+            else {
+                it.visibility = View.INVISIBLE
+            }
+        }
+    }
+
+    override fun onDestroy() {
+        model.currentMeeting.value = null
+        super.onDestroy()
+    }
+
+    private fun enableOnReady(view: View) {
+        val s = view.allViews
+
+        s.iterator().forEach {
+            if(it.id == R.id.progressBar_cyclic) {
+                it.visibility = View.GONE
+            }
+            else {
+                it.visibility = View.VISIBLE
+            }
+        }
     }
 
     private fun showDialog(){

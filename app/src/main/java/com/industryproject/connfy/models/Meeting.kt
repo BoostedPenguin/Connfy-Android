@@ -54,7 +54,7 @@ data class MeetingResponse(
 )
 
 data class SingleMeetingResponse(
-        val data: Meeting,
+        var data: Meeting,
 )
 
 data class StringResponse(

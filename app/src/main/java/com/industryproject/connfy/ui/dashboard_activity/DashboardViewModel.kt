@@ -30,10 +30,6 @@ class DashboardViewModel @Inject constructor(
     val selectedPersonProfile
             = MutableLiveData<User>(User(null, null, null, null))
 
-
-    val meetings =
-            MutableLiveData<MeetingResponse>();
-
     val currentMeeting =
             MutableLiveData<SingleMeetingResponse>()
 
@@ -128,23 +124,6 @@ class DashboardViewModel @Inject constructor(
             }
         }
     }
-
-    fun getMeetings() = viewModelScope.launch{
-        meetingRepository.getMeetings().let {
-            if (it.isSuccessful){
-                if(it.body() == null) {
-                    meetings.value = MeetingResponse(emptyList())
-                }
-                else {
-                    meetings.postValue(it.body())
-                }
-                Log.d("success", it.body().toString())
-            }else{
-                Log.d("retrofit", it.message())
-                Log.d("retrofit", it.code().toString())
-            }
-        }
-    }
     fun getMeeting(uid:String) = viewModelScope.launch{
         meetingRepository.getMeetingByUid(uid).let {
             if(it.isSuccessful){
@@ -167,7 +146,7 @@ class DashboardViewModel @Inject constructor(
                 //currentMeeting.postValue(it.body())
 
 
-                getMeetings()
+                //getMeetings()
                 Log.d("success", it.body().toString())
             }else{
                 Log.d("retrofit", it.message())

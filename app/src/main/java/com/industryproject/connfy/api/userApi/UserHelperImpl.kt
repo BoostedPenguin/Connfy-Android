@@ -18,8 +18,7 @@ class UserHelperImpl @Inject constructor(
 ) : UserHelper {
 
 
-    override suspend fun createUserInDB(provider: String): Response<UserResponse> = userService.createUserInDB("Bearer ".plus(getTokenResult()?.token!!), provider)
-    override suspend fun createUserInDB(provider: String, name: String): Response<UserResponse> = userService.createUserInDB("Bearer ".plus(getTokenResult()?.token!!), provider, name)
+    override suspend fun createUserInDB(provider: String, name: String, email: String): Response<UserResponse> = userService.createUserInDB("Bearer ".plus(getTokenResult()?.token!!), provider, name, email)
 
 
     override suspend fun getMainUserInfo(): Response<SelfUser> = userService.getMainUserInfo("Bearer ".plus(getTokenResult()?.token!!))

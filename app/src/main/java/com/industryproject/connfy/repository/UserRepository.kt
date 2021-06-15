@@ -10,7 +10,6 @@ class UserRepository @Inject constructor(
     private val userHelper: UserHelper
 ) {
 
-    suspend fun createUserInDB(provider: String) = userHelper.createUserInDB(provider)
-    suspend fun createUserInDB(provider: String, name: String) = userHelper.createUserInDB(provider, name)
+    suspend fun createUserInDB(provider: String, name: String, email: String) = userHelper.createUserInDB(provider, name, email)
     suspend fun getMainUserInfo() = userHelper.getMainUserInfo()
 }

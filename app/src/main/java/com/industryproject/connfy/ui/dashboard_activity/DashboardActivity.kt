@@ -225,6 +225,9 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
                 builder.show()
 
             }
+            R.id.nav_history -> {
+
+            }
 
 //            R.id.nav_fitness_tracker -> {
 //                //model.getMeetings()

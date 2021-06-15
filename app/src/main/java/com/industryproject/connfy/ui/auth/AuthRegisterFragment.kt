@@ -102,7 +102,7 @@ class AuthRegisterFragment : Fragment() {
                                         val idToken: String? = it.result?.token
                                         Log.d("IDTOKEN", idToken.toString())
 
-                                        model.createUserInDBEmail("EMAIL", name)
+                                        model.createUserInDBEmail("EMAIL", name, email)
                                     } else {
                                         Log.d("create_user", task.exception?.message.toString())
                                     }

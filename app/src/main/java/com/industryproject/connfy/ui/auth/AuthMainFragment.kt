@@ -114,7 +114,7 @@ class AuthMainFragment : Fragment() {
                         val user = auth.currentUser
 
                         if (user != null) {
-                            model.createUserInDBEmail("GOOGLE", user.displayName?: "")
+                            model.createUserInDBEmail("GOOGLE", user.displayName?: "", user.email?: "")
                         }
                     } else {
                         // If sign in fails, display a message to the user.

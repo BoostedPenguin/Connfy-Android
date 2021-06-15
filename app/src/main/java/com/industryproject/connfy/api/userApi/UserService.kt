@@ -9,11 +9,7 @@ interface UserService{
 
     @FormUrlEncoded
     @POST("users/create")
-    suspend fun createUserInDB(@Header("Authorization") header: String, @Field("provider") provider: String ) : Response<UserResponse>
-
-    @FormUrlEncoded
-    @POST("users/create")
-    suspend fun createUserInDB(@Header("Authorization") header: String, @Field("provider") provider: String, @Field("name") name: String ) : Response<UserResponse>
+    suspend fun createUserInDB(@Header("Authorization") header: String, @Field("provider") provider: String, @Field("name") name: String, @Field("email") email: String) : Response<UserResponse>
 
     @GET("users/")
     suspend fun getMainUserInfo(@Header("Authorization") header: String): Response<SelfUser>

@@ -6,7 +6,6 @@ import retrofit2.Response
 import retrofit2.http.Header
 
 interface UserHelper {
-    suspend fun createUserInDB(provider: String): Response<UserResponse>
-    suspend fun createUserInDB(provider: String, name: String): Response<UserResponse>
+    suspend fun createUserInDB(provider: String, name: String, email: String): Response<UserResponse>
     suspend fun getMainUserInfo(): Response<SelfUser>
 }

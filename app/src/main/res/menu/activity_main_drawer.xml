@@ -9,9 +9,9 @@
             android:icon="@drawable/ic_baseline_home_24"
             android:title="Dashboard" />
         <item
-            android:id="@+id/nav_agenda"
+            android:id="@+id/nav_history"
             android:icon="@drawable/ic_baseline_calendar_today_24"
-            android:title="Agenda" />
+            android:title="History" />
         <item
             android:id="@+id/nav_notes"
             android:icon="@drawable/ic_baseline_speaker_notes_24"
