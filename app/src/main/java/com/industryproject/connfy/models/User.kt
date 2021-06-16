@@ -8,16 +8,16 @@ import com.google.gson.annotations.SerializedName
 
 data class User(
     @SerializedName("uid")
-    val uid: String?,
+    var uid: String?,
 
     @SerializedName("name")
-    val name: String?,
+    var name: String?,
 
     @SerializedName("email")
-    val email: String?,
+    var email: String?,
 
     @SerializedName("hasOutlook")
-    val hasOutlook: Boolean?,
+    var hasOutlook: Boolean?,
 )
 
 data class UserResponse(
@@ -27,4 +27,8 @@ data class UserResponse(
 
 data class SelfUser(
     val data: User,
+)
+
+data class ContactsResponse(
+        val data: List<User>,
 )

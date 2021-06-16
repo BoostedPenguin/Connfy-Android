@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/meeting_view_constraint"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
@@ -16,21 +17,21 @@
         tools:ignore="FragmentTagUsage" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/createMeetingUsersRecyclerView"
+        android:id="@+id/meetingUsersRecyclerView"
         app:layout_constraintTop_toBottomOf="@+id/mapView"
         android:layout_width="match_parent"
         android:layout_height="200dp" />
 
     <Button
         android:layout_marginTop="10dp"
-        android:id="@+id/textButton"
+        android:id="@+id/meeting_add_to_meeting"
         style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Add member"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/createMeetingUsersRecyclerView" />
+        app:layout_constraintTop_toBottomOf="@+id/meetingUsersRecyclerView" />
 
 
     <com.google.android.material.button.MaterialButton
@@ -49,7 +50,7 @@
         app:iconTint="@color/white"
         app:iconGravity="textEnd"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textButton"
+        app:layout_constraintTop_toBottomOf="@+id/meeting_add_to_meeting"
         app:icon="@drawable/ic_baseline_keyboard_voice_24"/>
 
 
@@ -69,9 +70,22 @@
         android:backgroundTint="@color/primary_dark"
         app:iconTint="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textButton"
+        app:layout_constraintTop_toBottomOf="@+id/meeting_add_to_meeting"
         app:iconSize="35dp"
         app:iconGravity="textEnd"
         app:icon="@drawable/ic_baseline_speaker_notes_24"/>
+
+    <ProgressBar
+        android:id="@+id/progressBar_cyclic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:minWidth="100dp"
+        android:minHeight="100dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

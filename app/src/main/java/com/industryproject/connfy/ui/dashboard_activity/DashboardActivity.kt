@@ -50,20 +50,34 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
 
         setupDrawers()
 
+        // Store http data in viewmodel
+        getDataOnStart()
+
+        // Initiate observers
+        initObservers()
+    }
+
+    private fun initObservers() {
         model.contacts.observe(this, Observer {
-            it?.data?.let { it1 ->
-                adapter.setContacts(it1)
+            if(it?.data != null) {
+                adapter.setContacts(it.data)
             }
         })
 
         model.thisUser.observe(this, Observer {
             it?.data?.let { it1 ->
                 val headerLayout: View = findViewById<NavigationView>(R.id.nav_view).getHeaderView(0)
-                headerLayout.findViewById<TextView>(R.id.leftDrawerPersonName).text = it1.name
+
+                val displayName: String = it1.name ?: auth.currentUser?.displayName?: ""
+                headerLayout.findViewById<TextView>(R.id.leftDrawerPersonName).text = displayName
                 headerLayout.findViewById<TextView>(R.id.leftDrawerPersonEmail).text = auth.currentUser?.email
             }
         })
+    }
 
+    private fun getDataOnStart() {
+        model.getContacts()
+        model.getMainUserInfo()
     }
 
     private fun setupDrawers() {
@@ -134,6 +148,7 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
                 val bundle = bundleOf(
                         Pair("PERSON_NAME", person.name),
                         Pair("PERSON_EMAIL", person.email),
+                        Pair("PERSON_UID", person.uid)
                 )
                 findNavController(R.id.nav_host_fragment).navigate(R.id.nav_profile_view, bundle)
             }
@@ -210,8 +225,16 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
                 builder.show()
 
             }
-        }
+            R.id.nav_history -> {
 
+            }
+
+//            R.id.nav_fitness_tracker -> {
+//                //model.getMeetings()
+//                model.updateMeeting("9GHGOcViNC2XugFixIbf");
+//                //model.updateMeeting("Mts2gIncb7OsAzlhKUz3");
+//            }
+        }
         return true
     }
 }

@@ -1,5 +1,6 @@
 package com.industryproject.connfy.adapters
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -7,16 +8,23 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
-import com.industryproject.connfy.MeetingExample
 import com.industryproject.connfy.R
+import com.industryproject.connfy.models.FBDate
+import com.industryproject.connfy.models.Meeting
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class DashboardMeetingsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var cardClickListener: OnCardClickListener? = null
-    private var meetings: List<MeetingExample> = ArrayList()
+    private var meetings: List<Meeting> = ArrayList()
 
-    fun setMeetings(meetings: List<MeetingExample>) {
+    @SuppressLint("SimpleDateFormat")
+    private val sfd = SimpleDateFormat("dd-MM-yyyy HH:mm")
+
+    fun setMeetings(meetings: List<Meeting>) {
         this.meetings = meetings
         notifyDataSetChanged()
     }
@@ -41,11 +49,14 @@ class DashboardMeetingsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>()
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (meetings[position].outlook) {
-            1
-        } else{
-            0
-        }
+        return if(meetings[position].isOutlook == true) 1 else 0
+    }
+
+    private fun getDisplayDate(timestamp: FBDate?) : String {
+        return if(timestamp == null)
+            "Unknown"
+        else
+            sfd.format(Date(timestamp._seconds * 1000L))
     }
 
 
@@ -55,23 +66,24 @@ class DashboardMeetingsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>()
                 val vh1: MeetingHolderOutlook = holder as MeetingHolderOutlook
                 vh1.meeting = meetings[position]
 
-                vh1.cardMeetingName.text = meetings[position].name
-                vh1.cardMeetingAmountPeople.text = meetings[position].participantsAmount.toString()
-                vh1.cardMeetingDate.text = meetings[position].date
+                vh1.cardMeetingName.text = meetings[position].title
+                vh1.cardMeetingAmountPeople.text = meetings[position].invitedUsersIds?.size.toString()
+
+                vh1.cardMeetingDate.text = getDisplayDate(meetings[position].date)
             }
             0 -> {
                 val vh2: MeetingHolder = holder as MeetingHolder
                 vh2.meeting = meetings[position]
 
-                vh2.cardMeetingName.text = meetings[position].name
-                vh2.cardMeetingAmountPeople.text = meetings[position].participantsAmount.toString()
-                vh2.cardMeetingDate.text = meetings[position].date
+                vh2.cardMeetingName.text = meetings[position].title
+                vh2.cardMeetingAmountPeople.text = meetings[position].invitedUsersIds?.size.toString()
+                vh2.cardMeetingDate.text = getDisplayDate(meetings[position].date)
             }
         }
     }
 
     interface OnCardClickListener {
-        fun onCardClick(position: Int, meeting: MeetingExample)
+        fun onCardClick(position: Int, meeting: Meeting)
     }
 
     fun setOnCardClickListener(listener: OnCardClickListener?) {
@@ -83,7 +95,7 @@ class DashboardMeetingsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>()
     }
 
     inner class MeetingHolderOutlook(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        lateinit var meeting: MeetingExample
+        lateinit var meeting: Meeting
         internal var cardMeetingName: TextView = itemView.findViewById(R.id.cardMeetingName)
         internal var cardMeetingAmountPeople: TextView = itemView.findViewById(R.id.cardMeetingAmountPeople)
         internal var cardMeetingDate: TextView = itemView.findViewById(R.id.cardMeetingDate)
@@ -98,12 +110,11 @@ class DashboardMeetingsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>()
                     cardClickListener!!.onCardClick(position, meetings[adapterPosition])
                 }
             }
-
         }
     }
 
     inner class MeetingHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        lateinit var meeting: MeetingExample
+        lateinit var meeting: Meeting
         internal var cardMeetingName: TextView = itemView.findViewById(R.id.cardMapMeetingName)
         internal var cardMeetingAmountPeople: TextView = itemView.findViewById(R.id.cardMapMeetingAmountPeople)
         internal var cardMeetingDate: TextView = itemView.findViewById(R.id.cardMapMeetingDate)

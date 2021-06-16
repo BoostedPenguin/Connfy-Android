@@ -61,20 +61,25 @@ class AuthRegisterFragment : Fragment() {
 
             val email: String = view.findViewById<EditText>(R.id.createEmail).text.toString()
             val password: String = view.findViewById<EditText>(R.id.createPassword).text.toString()
+            val name: String = view.findViewById<EditText>(R.id.createName).text.toString()
 
-            if(!isEmailValid(email)) {
+            if(name.isEmpty()) {
+                Toast.makeText(context, "Name is empty", Toast.LENGTH_SHORT).show()
+            }
+            else if(!isEmailValid(email)) {
                 Toast.makeText(context, "Email isn't valid", Toast.LENGTH_SHORT).show()
             }
             else if(password.isEmpty()) {
                 Toast.makeText(context, "Password isn't valid", Toast.LENGTH_SHORT).show()
             }
             else {
-                createUser(email, password)
+                createUser(email, password, name)
             }
         }
 
         model.onCreationComplete.observe(viewLifecycleOwner, Observer {
             if(it) {
+                model.onCreationComplete.value = false;
                 val intent = Intent(context, DashboardActivity::class.java)
                 signOut.launch(intent)
             }
@@ -85,7 +90,7 @@ class AuthRegisterFragment : Fragment() {
         return Patterns.EMAIL_ADDRESS.matcher(email).matches()
     }
 
-    private fun createUser(email: String, password: String) {
+    private fun createUser(email: String, password: String, name: String) {
         auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(requireActivity()) { task ->
                     if (task.isSuccessful) {
@@ -97,7 +102,7 @@ class AuthRegisterFragment : Fragment() {
                                         val idToken: String? = it.result?.token
                                         Log.d("IDTOKEN", idToken.toString())
 
-                                        model.createUserInDB()
+                                        model.createUserInDBEmail("EMAIL", name, email)
                                     } else {
                                         Log.d("create_user", task.exception?.message.toString())
                                     }

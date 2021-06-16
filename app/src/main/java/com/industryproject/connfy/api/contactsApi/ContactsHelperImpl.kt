@@ -1,4 +1,4 @@
-package com.industryproject.connfy.api
+package com.industryproject.connfy.api.contactsApi
 
 import android.util.Log
 import androidx.annotation.WorkerThread
@@ -6,25 +6,20 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GetTokenResult
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import com.google.gson.JsonObject
-import com.industryproject.connfy.models.SelfUser
-import com.industryproject.connfy.models.UserResponse
-import okhttp3.ResponseBody
+import com.industryproject.connfy.models.ContactsResponse
 import retrofit2.Response
-import retrofit2.http.Header
 import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
-class UserHelperImpl @Inject constructor(
-    private val userService: UserService
-) : UserHelper {
+class ContactsHelperImpl @Inject constructor(
+        private val contactsService: ContactsService
+) : ContactsHelper {
 
 
-    override suspend fun getUsers(): Response<UserResponse> = userService.getUsers()
-    override suspend fun getUserContacts(): Response<UserResponse> = userService.getUserContacts("Bearer ".plus(getTokenResult()?.token!!))
-    override suspend fun createUserInDB(): Response<UserResponse> = userService.createUserInDB("Bearer ".plus(getTokenResult()?.token!!))
-    override suspend fun getMainUserInfo(): Response<SelfUser> = userService.getMainUserInfo("Bearer ".plus(getTokenResult()?.token!!))
+    override suspend fun getContacts(): Response<ContactsResponse> = contactsService.getUserContacts("Bearer ".plus(getTokenResult()?.token!!))
+    override suspend fun addContact(contactUid: String): Response<ContactsResponse> = contactsService.addContact("Bearer ".plus(getTokenResult()?.token!!), contactUid);
+    override suspend fun deleteContact(contactUid: String): Response<ContactsResponse> = contactsService.deleteContact("Bearer ".plus(getTokenResult()?.token!!), contactUid);
 
     @WorkerThread
     private suspend fun getTokenResult () = suspendCoroutine<GetTokenResult?> { continuation ->
