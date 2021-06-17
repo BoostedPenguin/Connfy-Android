@@ -121,65 +121,63 @@ class MeetingViewFragment : Fragment(), OnMapReadyCallback {
     override fun onMapReady(googleMap: GoogleMap?) {
         this.googleMap = googleMap
         model.currentMeeting.observe(viewLifecycleOwner, {
-            val geoLocationList = model.currentMeeting.value?.data?.geoLocation!!
-            Log.d("GEO LOCATION list", geoLocationList.toString())
+            if (it != null) {
+                val geoLocationList = model.currentMeeting.value?.data?.geoLocation!!
+                Log.d("GEO LOCATION list", geoLocationList.toString())
 
-            for (cords in geoLocationList) {
-                Log.d("GEO LOCATION latitude", cords._latitude.toString())
-                Log.d("GEO LOCATION longitude", cords._longitude.toString())
-                googleMap!!.addMarker(
-                    MarkerOptions().position(
-                        LatLng(
-                            cords._latitude,
-                            cords._longitude
+                for (cords in geoLocationList) {
+                    Log.d("GEO LOCATION latitude", cords._latitude.toString())
+                    Log.d("GEO LOCATION longitude", cords._longitude.toString())
+                    googleMap!!.addMarker(
+                        MarkerOptions().position(
+                            LatLng(
+                                cords._latitude,
+                                cords._longitude
+                            )
                         )
                     )
-                )
-                googleMap.moveCamera(
+                }
+
+                googleMap!!.moveCamera(
                     CameraUpdateFactory.newLatLngZoom(
                         (LatLng(
-                            cords._latitude,
-                            cords._longitude
-                        )), 14.5f
+                            geoLocationList[0]._latitude,
+                            geoLocationList[0]._longitude
+                        )), 14f
                     )
                 )
-            }
 
-            // Request directions only if there are 2 geo points or more in the list
-            if (geoLocationList.size > 1) {
-                Toast.makeText(context, "Getting directions is not available.", Toast.LENGTH_LONG)
-                    .show()
+                // Request directions only if there are 2 geo points or more in the list
+                if (geoLocationList.size > 1) {
+                    val path: MutableList<List<LatLng>> = ArrayList()
+                    val urlDirections = getDirectionsUrl(geoLocationList)
 
-                /* Uncomment this after setting up the billing account
-
-                val path: MutableList<List<LatLng>> = ArrayList()
-                val urlDirections = getDirectionsUrl(geoLocationList)
-
-                val directionsRequest = object : StringRequest(
-                    Request.Method.GET,
-                    urlDirections,
-                    Response.Listener<String> { response ->
-                        val jsonResponse = JSONObject(response)
-                        // Get routes
-                        val routes = jsonResponse.getJSONArray("routes")
-                        val legs = routes.getJSONObject(0).getJSONArray("legs")
-                        val steps = legs.getJSONObject(0).getJSONArray("steps")
-                        for (i in 0 until steps.length()) {
-                            val points =
-                                steps.getJSONObject(i).getJSONObject("polyline").getString("points")
-                            path.add(PolyUtil.decode(points))
-                        }
-                        for (i in 0 until path.size) {
-                            this.googleMap!!.addPolyline(
-                                PolylineOptions().addAll(path[i]).color(Color.BLUE)
-                            )
-                        }
-                    },
-                    Response.ErrorListener { _ ->
-                    }) {}
-                val requestQueue = Volley.newRequestQueue(requireContext())
-                requestQueue.add(directionsRequest)
-                */
+                    val directionsRequest = object : StringRequest(
+                        Method.GET,
+                        urlDirections,
+                        Response.Listener { response ->
+                            val jsonResponse = JSONObject(response)
+                            // Get routes
+                            val routes = jsonResponse.getJSONArray("routes")
+                            val legs = routes.getJSONObject(0).getJSONArray("legs")
+                            val steps = legs.getJSONObject(0).getJSONArray("steps")
+                            for (i in 0 until steps.length()) {
+                                val points =
+                                    steps.getJSONObject(i).getJSONObject("polyline")
+                                        .getString("points")
+                                path.add(PolyUtil.decode(points))
+                            }
+                            for (i in 0 until path.size) {
+                                this.googleMap!!.addPolyline(
+                                    PolylineOptions().addAll(path[i]).color(Color.BLUE)
+                                )
+                            }
+                        },
+                        Response.ErrorListener {
+                        }) {}
+                    val requestQueue = Volley.newRequestQueue(requireContext())
+                    requestQueue.add(directionsRequest)
+                }
             }
         })
     }
@@ -208,10 +206,10 @@ class MeetingViewFragment : Fragment(), OnMapReadyCallback {
         // Requests using more than 10 waypoints (between 11 and 25) are billed at a higher rate
         if (geoLocationPoints.size in 3..10) {
             for (point in geoLocationPoints) {
-                waypoints += "${point._latitude}%2C${point._longitude},"
+                waypoints += "via:${point._latitude}%2C${point._longitude}%7C"
             }
             // Remove the comma after the last waypoint
-            waypoints.dropLast(1)
+            waypoints.dropLast(3)
 
             parameters += "&$waypoints"
         }
@@ -224,6 +222,10 @@ class MeetingViewFragment : Fragment(), OnMapReadyCallback {
 
         // Building the url to the web service
         return "https://maps.googleapis.com/maps/api/directions/$output?$parameters&$apiKey"
+        /*return "https://maps.googleapis.com/maps/api/directions/json?\n" +
+                "origin=sydney,au&destination=perth,au\n" +
+                "&waypoints=via:-37.81223%2C144.96254%7Cvia:-34.92788%2C138.60008\n" +
+                "&$apiKey"*/
     }
 
     private fun showDialog() {
