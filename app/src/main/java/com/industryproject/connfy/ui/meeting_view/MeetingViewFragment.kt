@@ -22,7 +22,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
@@ -222,10 +221,6 @@ class MeetingViewFragment : Fragment(), OnMapReadyCallback {
 
         // Building the url to the web service
         return "https://maps.googleapis.com/maps/api/directions/$output?$parameters&$apiKey"
-        /*return "https://maps.googleapis.com/maps/api/directions/json?\n" +
-                "origin=sydney,au&destination=perth,au\n" +
-                "&waypoints=via:-37.81223%2C144.96254%7Cvia:-34.92788%2C138.60008\n" +
-                "&$apiKey"*/
     }
 
     private fun showDialog() {
