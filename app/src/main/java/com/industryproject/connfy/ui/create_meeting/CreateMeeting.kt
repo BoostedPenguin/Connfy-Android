@@ -1,9 +1,7 @@
 package com.industryproject.connfy.ui.create_meeting
 
 import android.app.AlertDialog
-import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -11,26 +9,21 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
-import com.android.volley.Response
-import com.android.volley.toolbox.StringRequest
-import com.android.volley.toolbox.Volley
-import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
-import com.google.android.gms.maps.model.PolylineOptions
-import com.google.maps.android.PolyUtil
 import com.industryproject.connfy.R
+import com.industryproject.connfy.models.GeoLocation
 import com.industryproject.connfy.ui.dashboard_activity.DashboardViewModel
-import org.json.JSONObject
 
 class CreateMeeting : Fragment(), OnMapReadyCallback, GoogleMap.OnMapClickListener,
     GoogleMap.OnMapLongClickListener, GoogleMap.OnMarkerClickListener {
     private val model: DashboardViewModel by activityViewModels()
     private var googleMap: GoogleMap? = null
+    private var routeList: MutableList<GeoLocation> = ArrayList<GeoLocation>()
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -45,8 +38,19 @@ class CreateMeeting : Fragment(), OnMapReadyCallback, GoogleMap.OnMapClickListen
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
+
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.create_meeting, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        var btnCreateMeeting: Button = view.findViewById(R.id.button2)
+        btnCreateMeeting.setOnClickListener{
+            Toast.makeText(context,"works",Toast.LENGTH_LONG).show()
+            model.createMeeting(routeList)
+        }
     }
 
     override fun onMapReady(googleMap: GoogleMap?) {
@@ -66,10 +70,12 @@ class CreateMeeting : Fragment(), OnMapReadyCallback, GoogleMap.OnMapClickListen
         //Add marker on LongClick position
         val markerOptions = MarkerOptions().position(latLng).title(latLng.toString())
         this.googleMap?.addMarker(markerOptions)
+        routeList.add(GeoLocation(latLng.latitude, latLng.longitude))
     }
 
     override fun onMarkerClick(marker: Marker): Boolean {
         marker.remove()
+        routeList.remove(GeoLocation(marker.position.latitude, marker.position.longitude))
         return false
     }
 

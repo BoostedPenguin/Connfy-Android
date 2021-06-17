@@ -135,9 +135,13 @@ class DashboardViewModel @Inject constructor(
             }
         }
     }
-    fun createMeeting() = viewModelScope.launch{
+    fun createMeeting(routeList: MutableList<GeoLocation>?) = viewModelScope.launch{
+        var geoLocation = mutableListOf<GeoLocation>(GeoLocation(54.6476, 51.6479));
+
+        if (routeList != null && routeList.size > 0) {
+            geoLocation = routeList
+        }
         val invitedUsersIds = mutableListOf<String>("Z0WOa94yEQSKw4WS7vWu9LonQW83", "OkBrFl1snXXoPUuuyka99Ol8Rim2");
-        val geoLocation = mutableListOf<GeoLocation>(GeoLocation(54.6476, 51.6479));
 
         val req = MeetingRequest("Boosted Penguin", invitedUsersIds, geoLocation, "Some title", false);
 
