@@ -2,8 +2,12 @@ package com.industryproject.connfy.ui.meeting_view
 
 import android.Manifest
 import android.app.AlertDialog
+import android.content.Context
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -29,9 +33,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
-import com.google.android.gms.maps.model.PolylineOptions
+import com.google.android.gms.maps.model.*
 import com.google.maps.android.PolyUtil
 import com.industryproject.connfy.R
 import com.industryproject.connfy.adapters.MeetingUsersAdapter
@@ -123,21 +125,25 @@ class MeetingViewFragment : Fragment(), OnMapReadyCallback {
             if (it != null) {
                 val geoLocationList = model.currentMeeting.value?.data?.geoLocation!!
                 Log.d("GEO LOCATION list", geoLocationList.toString())
-
-                for (cords in geoLocationList) {
-                    Log.d("GEO LOCATION latitude", cords._latitude.toString())
-                    Log.d("GEO LOCATION longitude", cords._longitude.toString())
-                    googleMap!!.addMarker(
-                        MarkerOptions().position(
-                            LatLng(
-                                cords._latitude,
-                                cords._longitude
-                            )
+                googleMap!!.addMarker(
+                    MarkerOptions().position(
+                        LatLng(geoLocationList[0]._latitude, geoLocationList[0]._longitude)
+                    ).icon(context?.let { it1 ->
+                        bitmapDescriptorFromVector(
+                            it1,
+                            R.drawable.ic_baseline_trip_origin_14
                         )
-                    )
-                }
-
-                googleMap!!.moveCamera(
+                    })
+                )
+                googleMap.addMarker(
+                    MarkerOptions().position(
+                        LatLng(
+                            geoLocationList[geoLocationList.lastIndex]._latitude,
+                            geoLocationList[geoLocationList.lastIndex]._longitude
+                        )
+                    ).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
+                )
+                googleMap.moveCamera(
                     CameraUpdateFactory.newLatLngZoom(
                         (LatLng(
                             geoLocationList[0]._latitude,
@@ -221,6 +227,26 @@ class MeetingViewFragment : Fragment(), OnMapReadyCallback {
 
         // Building the url to the web service
         return "https://maps.googleapis.com/maps/api/directions/$output?$parameters&$apiKey"
+    }
+
+    private fun bitmapDescriptorFromVector(context: Context, vectorResId: Int): BitmapDescriptor {
+        val vectorDrawable: Drawable? = ContextCompat.getDrawable(context, vectorResId)
+        vectorDrawable?.setBounds(
+            0,
+            0,
+            vectorDrawable.intrinsicWidth,
+            vectorDrawable.intrinsicHeight
+        )
+        val bitmap: Bitmap? = vectorDrawable?.let {
+            Bitmap.createBitmap(
+                it.intrinsicWidth,
+                vectorDrawable.minimumHeight,
+                Bitmap.Config.ARGB_8888
+            )
+        }
+        val canvas = Canvas(bitmap!!)
+        vectorDrawable.draw(canvas)
+        return BitmapDescriptorFactory.fromBitmap(bitmap)
     }
 
     private fun showDialog() {
