@@ -1,12 +1,17 @@
 package com.industryproject.connfy.ui.create_meeting
 
 import android.app.AlertDialog
+import android.app.DatePickerDialog
+import android.app.TimePickerDialog
+import android.os.Build
 import android.os.Bundle
+import android.text.format.DateFormat.is24HourFormat
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.Toast
+import android.widget.*
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.google.android.gms.maps.GoogleMap
@@ -16,15 +21,32 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.material.textfield.TextInputEditText
 import com.industryproject.connfy.R
 import com.industryproject.connfy.models.GeoLocation
 import com.industryproject.connfy.ui.dashboard_activity.DashboardViewModel
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.properties.Delegates
 
 class CreateMeeting : Fragment(), OnMapReadyCallback, GoogleMap.OnMapClickListener,
-    GoogleMap.OnMapLongClickListener, GoogleMap.OnMarkerClickListener {
+    GoogleMap.OnMapLongClickListener, GoogleMap.OnMarkerClickListener, DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
     private val model: DashboardViewModel by activityViewModels()
     private var googleMap: GoogleMap? = null
     private var routeList: MutableList<GeoLocation> = ArrayList<GeoLocation>()
+
+    private var day: Int = 0
+    private var month: Int = 0
+    private var year: Int = 0
+    private var hour: Int = 0
+    private var minutes: Int = 0
+    private var dateTime: String = ""
+
+    private lateinit var dateTimeTxtVw: TextView
+    private lateinit var dateTimeEditTxt: EditText
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -46,14 +68,27 @@ class CreateMeeting : Fragment(), OnMapReadyCallback, GoogleMap.OnMapClickListen
         return inflater.inflate(R.layout.create_meeting, container, false)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        var btnCreateMeeting: Button = view.findViewById(R.id.button2)
+        val btnCreateMeeting: Button = view.findViewById(R.id.btnCreateMeeting)
+        val btnDatePicker: ImageButton = view.findViewById(R.id.create_meeting_date_button)
+        dateTimeEditTxt = view.findViewById(R.id.create_meeting_title)
+        dateTimeTxtVw = view.findViewById(R.id.create_meeting_title2)
         btnCreateMeeting.setOnClickListener {
             Toast.makeText(context, "works", Toast.LENGTH_LONG).show()
-            model.createMeeting(routeList)
+            val title: String = dateTimeEditTxt.text.toString()
+
+            model.createMeeting(routeList, LocalDateTime.of(year, month, day, hour, minutes), title)
         }
+
+        btnDatePicker.setOnClickListener{
+            val calendar: Calendar = Calendar.getInstance()
+            context?.let { it1 -> DatePickerDialog(it1, this, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH)) }?.show()
+        }
+
+
     }
 
     override fun onMapReady(googleMap: GoogleMap?) {
@@ -158,5 +193,25 @@ class CreateMeeting : Fragment(), OnMapReadyCallback, GoogleMap.OnMapClickListen
         dialog = builder.create()
 
         dialog.show()
+    }
+
+    override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
+        day = dayOfMonth;
+        this.month = month+1;
+        this.year = year;
+
+        val calendar: Calendar = Calendar.getInstance()
+        hour = calendar.get(Calendar.HOUR)
+        minutes = calendar.get(Calendar.MINUTE)
+        val timePickerDialog = TimePickerDialog(context, this, hour, minutes, true)
+        timePickerDialog.show()
+    }
+
+    override fun onTimeSet(view: TimePicker?, hourOfDay: Int, minute: Int) {
+        hour = hourOfDay;
+        minutes = minute;
+
+        dateTime = "$day/$month/$year $hour:$minutes"
+        dateTimeTxtVw.text = dateTime
     }
 }

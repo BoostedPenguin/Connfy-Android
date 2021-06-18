@@ -71,7 +71,7 @@
         app:layout_constraintTop_toBottomOf="@+id/createMeetingUsersRecyclerView" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/btnCreateMeeting"
         android:layout_width="match_parent"
         android:layout_marginHorizontal="20dp"
         android:layout_height="wrap_content"

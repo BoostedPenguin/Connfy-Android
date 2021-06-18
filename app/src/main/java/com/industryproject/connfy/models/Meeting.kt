@@ -46,7 +46,8 @@ data class MeetingRequest(
         var invitedUsers: List<String>,
         var geoLocation: List<GeoLocation>,
         var title: String,
-        var isOutlook: Boolean
+        var isOutlook: Boolean,
+        var date: Long,
 )
 
 data class MeetingResponse(

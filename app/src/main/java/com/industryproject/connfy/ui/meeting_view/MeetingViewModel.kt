@@ -37,7 +37,7 @@ class MeetingViewModel @Inject constructor(
         val invitedUsersIds = mutableListOf<String>("OkBrFl1snXXoPUuuyka99Ol8Rim2");
         val geoLocation = mutableListOf<GeoLocation>(GeoLocation(54.6466, 51.6479));
 
-        val req = MeetingRequest("Azis", invitedUsersIds, geoLocation, "Title", false);
+        val req = MeetingRequest("Azis", invitedUsersIds, geoLocation, "Title", false, 1624184972000);
 
         meetingRepository.updateMeeting(uid, req).let {
             if(it.isSuccessful){
