@@ -2,16 +2,17 @@ package com.industryproject.connfy.ui.create_meeting
 
 import android.app.AlertDialog
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
@@ -36,8 +37,10 @@ class CreateMeeting : Fragment(), OnMapReadyCallback, GoogleMap.OnMapClickListen
         registerEvents()
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
 
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.create_meeting, container, false)
@@ -47,8 +50,8 @@ class CreateMeeting : Fragment(), OnMapReadyCallback, GoogleMap.OnMapClickListen
         super.onViewCreated(view, savedInstanceState)
 
         var btnCreateMeeting: Button = view.findViewById(R.id.button2)
-        btnCreateMeeting.setOnClickListener{
-            Toast.makeText(context,"works",Toast.LENGTH_LONG).show()
+        btnCreateMeeting.setOnClickListener {
+            Toast.makeText(context, "works", Toast.LENGTH_LONG).show()
             model.createMeeting(routeList)
         }
     }
@@ -61,15 +64,29 @@ class CreateMeeting : Fragment(), OnMapReadyCallback, GoogleMap.OnMapClickListen
     }
 
     override fun onMapClick(latLng: LatLng) {
-        Toast.makeText(context,"onMapClick:${latLng.latitude} : ${latLng.longitude}",Toast.LENGTH_LONG).show()
+        Toast.makeText(
+            context,
+            "onMapClick:${latLng.latitude} : ${latLng.longitude}",
+            Toast.LENGTH_LONG
+        ).show()
     }
 
     override fun onMapLongClick(latLng: LatLng) {
-        Toast.makeText(context,"onMapLongClick:${latLng.latitude} : ${latLng.longitude}",Toast.LENGTH_LONG).show()
+        Toast.makeText(
+            context,
+            "onMapLongClick:${latLng.latitude} : ${latLng.longitude}",
+            Toast.LENGTH_LONG
+        ).show()
 
         //Add marker on LongClick position
         val markerOptions = MarkerOptions().position(latLng).title(latLng.toString())
-        this.googleMap?.addMarker(markerOptions)
+        this.googleMap?.addMarker(
+            markerOptions.icon(
+                BitmapDescriptorFactory.defaultMarker(
+                    BitmapDescriptorFactory.HUE_AZURE
+                )
+            )
+        )
         routeList.add(GeoLocation(latLng.latitude, latLng.longitude))
     }
 
@@ -85,21 +102,20 @@ class CreateMeeting : Fragment(), OnMapReadyCallback, GoogleMap.OnMapClickListen
         }
     }
 
-    private fun showDialog(){
+    private fun showDialog() {
         // TODO
         lateinit var dialog: AlertDialog
 
 
         val choices = mutableListOf<String>()
         val checked = mutableListOf<Boolean>()
-        for(contact in model.contacts.value?.data!!) {
+        for (contact in model.contacts.value?.data!!) {
 
-            choices.add(contact.name?: "Unknown")
+            choices.add(contact.name ?: "Unknown")
 
-            if(model.creatingMeeting.invitedUsers?.any {it -> it.uid == contact.uid} == true) {
+            if (model.creatingMeeting.invitedUsers?.any { it -> it.uid == contact.uid } == true) {
                 checked.add(true)
-            }
-            else {
+            } else {
                 checked.add(false)
             }
         }
@@ -111,12 +127,17 @@ class CreateMeeting : Fragment(), OnMapReadyCallback, GoogleMap.OnMapClickListen
 
         builder.setTitle("Choose members")
 
-        builder.setMultiChoiceItems(choicesArray, checkedArray.toBooleanArray() ) { dialog, which, isChecked->
+        builder.setMultiChoiceItems(
+            choicesArray,
+            checkedArray.toBooleanArray()
+        ) { dialog, which, isChecked ->
             checkedArray[which] = isChecked
 
             val selected = choicesArray[which]
-            Toast.makeText(context,
-                    "$selected $isChecked", Toast.LENGTH_SHORT).show();
+            Toast.makeText(
+                context,
+                "$selected $isChecked", Toast.LENGTH_SHORT
+            ).show();
         }
 
         builder.setPositiveButton("OK") { _, _ ->
@@ -126,7 +147,7 @@ class CreateMeeting : Fragment(), OnMapReadyCallback, GoogleMap.OnMapClickListen
 
                 if (checked) {
 
-                    if(model.contacts.value != null) {
+                    if (model.contacts.value != null) {
                         model.contacts.value!!.data[i].uid?.let { queueUsersToAdd.add(it) }
                     }
                 }
