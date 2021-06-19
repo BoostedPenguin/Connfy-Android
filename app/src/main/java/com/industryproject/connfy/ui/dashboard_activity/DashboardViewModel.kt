@@ -144,28 +144,23 @@ class DashboardViewModel @Inject constructor(
         }
     }
     @RequiresApi(Build.VERSION_CODES.O)
-    fun createMeeting(routeList: MutableList<GeoLocation>?, date: LocalDateTime?, title: String) = viewModelScope.launch{
-        var geoLocation = mutableListOf<GeoLocation>(GeoLocation(54.6476, 51.6479));
-
-        if (routeList != null && routeList.size > 0) {
-            geoLocation = routeList
-        }
-        val invitedUsersIds = mutableListOf<String>("Z0WOa94yEQSKw4WS7vWu9LonQW83", "OkBrFl1snXXoPUuuyka99Ol8Rim2");
-
-        val req = dateToSeconds(Date.from(date?.atZone(ZoneId.systemDefault())
-                ?.toInstant()))?.let { MeetingRequest("Boosted Penguin", invitedUsersIds, geoLocation, title, false, it) };
-
-        if (req != null) {
-            meetingRepository.createMeeting(req).let {
-                if(it.isSuccessful){
-                    //currentMeeting.postValue(it.body())
-
-
-                    //getMeetings()
-                    Log.d("success", it.body().toString())
-                }else{
-                    Log.d("retrofit", it.message())
-                    Log.d("retrofit", it.code().toString())
+    fun createMeeting(routeList: MutableList<GeoLocation>?, date: LocalDateTime?, title: String, invitedUsers: MutableList<String>) = viewModelScope.launch{
+        if (routeList != null && routeList.size > 0 && invitedUsers.size > 0) {
+            val req = dateToSeconds(Date.from(date?.atZone(ZoneId.systemDefault())
+                    ?.toInstant()))?.let {
+                thisUser.value!!.data.name?.let { it1 ->
+                        MeetingRequest(it1
+                                , invitedUsers, routeList, title, false, it)
+                }
+            };
+            if (req != null) {
+                meetingRepository.createMeeting(req).let {
+                    if(it.isSuccessful){
+                        Log.d("success", it.body().toString())
+                    }else{
+                        Log.d("retrofit", it.message())
+                        Log.d("retrofit", it.code().toString())
+                    }
                 }
             }
         }
@@ -201,15 +196,12 @@ class DashboardViewModel @Inject constructor(
     fun dateToSeconds(date: Date?): Long? {
         return try {
             val dateToSeconds: Long = date?.toInstant()?.toEpochMilli() ?: 0;
-            Log.d("dateTosec", dateToSeconds.toString())
-            Log.d("dateParam", date.toString())
             if (dateToSeconds == 0.toLong()){
                 null
             }else{
                 Log.d("date: ", dateToSeconds.toString());
                 dateToSeconds
             }
-
         }
         catch (e: Exception) {
             e.message?.let { Log.d("date: ", it) };

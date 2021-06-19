@@ -37,6 +37,7 @@ class CreateMeeting : Fragment(), OnMapReadyCallback, GoogleMap.OnMapClickListen
     private val model: DashboardViewModel by activityViewModels()
     private var googleMap: GoogleMap? = null
     private var routeList: MutableList<GeoLocation> = ArrayList<GeoLocation>()
+    private var invitedUsers: MutableList<String> = ArrayList<String>()
 
     private var day: Int = 0
     private var month: Int = 0
@@ -80,7 +81,7 @@ class CreateMeeting : Fragment(), OnMapReadyCallback, GoogleMap.OnMapClickListen
             Toast.makeText(context, "works", Toast.LENGTH_LONG).show()
             val title: String = dateTimeEditTxt.text.toString()
 
-            model.createMeeting(routeList, LocalDateTime.of(year, month, day, hour, minutes), title)
+            model.createMeeting(routeList, LocalDateTime.of(year, month, day, hour, minutes), title, invitedUsers)
         }
 
         btnDatePicker.setOnClickListener{
@@ -132,7 +133,7 @@ class CreateMeeting : Fragment(), OnMapReadyCallback, GoogleMap.OnMapClickListen
     }
 
     private fun registerEvents() {
-        requireView().findViewById<Button>(R.id.create_meeting_add_to_meeting).setOnClickListener {
+        requireView().findViewById<Button>(R.id.create_meeting_add_to_meeting2).setOnClickListener {
             showDialog()
         }
     }
@@ -187,7 +188,8 @@ class CreateMeeting : Fragment(), OnMapReadyCallback, GoogleMap.OnMapClickListen
                     }
                 }
             }
-            model.creatingMeeting.invitedUsersIds = queueUsersToAdd
+            //model.creatingMeeting.invitedUsersIds = queueUsersToAdd
+            invitedUsers.addAll(queueUsersToAdd)
         }
 
         dialog = builder.create()
