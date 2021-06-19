@@ -121,7 +121,7 @@ class MeetingViewFragment : Fragment(), OnMapReadyCallback {
 
     override fun onMapReady(googleMap: GoogleMap?) {
         this.googleMap = googleMap
-        model.currentMeeting.observe(viewLifecycleOwner, {
+        model.currentMeeting.observe(viewLifecycleOwner, Observer{
             if (it != null) {
                 val geoLocationList = model.currentMeeting.value?.data?.geoLocation!!
                 Log.d("GEO LOCATION list", geoLocationList.toString())

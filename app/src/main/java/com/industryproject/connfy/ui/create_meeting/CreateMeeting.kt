@@ -14,6 +14,7 @@ import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
@@ -78,10 +79,10 @@ class CreateMeeting : Fragment(), OnMapReadyCallback, GoogleMap.OnMapClickListen
         dateTimeEditTxt = view.findViewById(R.id.create_meeting_title)
         dateTimeTxtVw = view.findViewById(R.id.create_meeting_title2)
         btnCreateMeeting.setOnClickListener {
-            Toast.makeText(context, "works", Toast.LENGTH_LONG).show()
             val title: String = dateTimeEditTxt.text.toString()
 
             model.createMeeting(routeList, LocalDateTime.of(year, month, day, hour, minutes), title, invitedUsers)
+            findNavController().navigate(R.id.action_nav_create_meeting_to_nav_home)
         }
 
         btnDatePicker.setOnClickListener{
