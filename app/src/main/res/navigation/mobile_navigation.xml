@@ -46,6 +46,9 @@
         <action
             android:id="@+id/action_nav_create_meting_to_nav_profile_view"
             app:destination="@id/nav_profile_view" />
+        <action
+            android:id="@+id/action_nav_create_meeting_to_nav_home"
+            app:destination="@id/nav_home" />
     </fragment>
 
 </navigation>

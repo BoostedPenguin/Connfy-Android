@@ -1,6 +1,8 @@
 package com.industryproject.connfy.ui.dashboard_activity
 
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -12,6 +14,12 @@ import com.industryproject.connfy.repository.MeetingRepository
 import com.industryproject.connfy.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.sql.Timestamp
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.util.*
 import javax.inject.Inject
 
 
@@ -135,22 +143,25 @@ class DashboardViewModel @Inject constructor(
             }
         }
     }
-    fun createMeeting() = viewModelScope.launch{
-        val invitedUsersIds = mutableListOf<String>("Z0WOa94yEQSKw4WS7vWu9LonQW83", "OkBrFl1snXXoPUuuyka99Ol8Rim2");
-        val geoLocation = mutableListOf<GeoLocation>(GeoLocation(54.6476, 51.6479));
-
-        val req = MeetingRequest("Boosted Penguin", invitedUsersIds, geoLocation, "Some title", false);
-
-        meetingRepository.createMeeting(req).let {
-            if(it.isSuccessful){
-                //currentMeeting.postValue(it.body())
-
-
-                //getMeetings()
-                Log.d("success", it.body().toString())
-            }else{
-                Log.d("retrofit", it.message())
-                Log.d("retrofit", it.code().toString())
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun createMeeting(routeList: MutableList<GeoLocation>?, date: LocalDateTime?, title: String, invitedUsers: MutableList<String>) = viewModelScope.launch{
+        if (routeList != null && routeList.size > 0 && invitedUsers.size > 0) {
+            val req = dateToSeconds(Date.from(date?.atZone(ZoneId.systemDefault())
+                    ?.toInstant()))?.let {
+                thisUser.value!!.data.name?.let { it1 ->
+                        MeetingRequest(it1
+                                , invitedUsers, routeList, title, false, it)
+                }
+            };
+            if (req != null) {
+                meetingRepository.createMeeting(req).let {
+                    if(it.isSuccessful){
+                        Log.d("success", it.body().toString())
+                    }else{
+                        Log.d("retrofit", it.message())
+                        Log.d("retrofit", it.code().toString())
+                    }
+                }
             }
         }
     }
@@ -158,7 +169,7 @@ class DashboardViewModel @Inject constructor(
         val invitedUsersIds = mutableListOf<String>("OkBrFl1snXXoPUuuyka99Ol8Rim2");
         val geoLocation = mutableListOf<GeoLocation>(GeoLocation(54.6466, 51.6479));
 
-        val req = MeetingRequest("Azis", invitedUsersIds, geoLocation, "Title", false);
+        val req = MeetingRequest("Azis", invitedUsersIds, geoLocation, "Title", false, 1624184972000);
 
         meetingRepository.updateMeeting(uid, req).let {
             if(it.isSuccessful){
@@ -180,4 +191,22 @@ class DashboardViewModel @Inject constructor(
             }
         }
     }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun dateToSeconds(date: Date?): Long? {
+        return try {
+            val dateToSeconds: Long = date?.toInstant()?.toEpochMilli() ?: 0;
+            if (dateToSeconds == 0.toLong()){
+                null
+            }else{
+                Log.d("date: ", dateToSeconds.toString());
+                dateToSeconds
+            }
+        }
+        catch (e: Exception) {
+            e.message?.let { Log.d("date: ", it) };
+            null;
+        }
+    }
 }
+
