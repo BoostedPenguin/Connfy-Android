@@ -110,7 +110,7 @@ class NotesAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     }
 
     interface OnVoiceNotePlayClick {
-        fun onVoiceNotePlayClick(position: Int, meeting: Note)
+        fun onVoiceNotePlayClick(position: Int, note: Note)
     }
 
     fun setOnVoiceNotePlayClickListener(listener: OnVoiceNotePlayClick?) {

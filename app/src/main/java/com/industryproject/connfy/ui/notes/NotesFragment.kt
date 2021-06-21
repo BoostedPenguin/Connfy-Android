@@ -1,6 +1,8 @@
 package com.industryproject.connfy.ui.notes
 
+import android.media.MediaPlayer
 import android.os.Bundle
+import android.os.Environment
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -22,9 +24,9 @@ class NotesFragment : Fragment() {
 
     private var notesList = mutableListOf<Note>(
         Note("Fix frontend bug", false, "The button on the left sidebar is off centered", null),
-        Note("Voice recording #1", true, "16:34 16/04/2021", "someurl"),
         Note("Implement authentication", false, "Add authentication with 3rd party providers such as google, microsoft and github", null),
-    )
+        Note("Voice recording #1", true, "16:34 16/04/2021", Environment.getExternalStorageDirectory().absolutePath + "/recording.mp3"),
+        )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,8 +46,11 @@ class NotesFragment : Fragment() {
         notesRecView?.layoutManager = LinearLayoutManager(context)
 
         notesAdapter.setOnVoiceNotePlayClickListener(object: NotesAdapter.OnVoiceNotePlayClick {
-            override fun onVoiceNotePlayClick(position: Int, meeting: Note) {
-                TODO("Not yet implemented")
+            override fun onVoiceNotePlayClick(position: Int, note: Note) {
+                var mp = MediaPlayer()
+                mp.setDataSource(note.voiceNoteLink)
+                mp.prepare()
+                mp.start()
             }
         } )
 
