@@ -38,5 +38,10 @@
             app:argType="string"
             android:defaultValue="GJOHO"/>
     </fragment>
+    <fragment
+        android:id="@+id/notesFragment"
+        android:name="com.industryproject.connfy.NotesFragment"
+        android:label="fragment_notes"
+        tools:layout="@layout/fragment_notes" />
 
 </navigation>
