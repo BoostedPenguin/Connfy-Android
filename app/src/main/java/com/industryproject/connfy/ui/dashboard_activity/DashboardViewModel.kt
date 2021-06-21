@@ -32,6 +32,7 @@ class DashboardViewModel @Inject constructor(
 
 
 
+    val isCreated = MutableLiveData<Boolean>(false)
     val contacts
             = MutableLiveData<ContactsResponse>()
 
@@ -156,6 +157,7 @@ class DashboardViewModel @Inject constructor(
             if (req != null) {
                 meetingRepository.createMeeting(req).let {
                     if(it.isSuccessful){
+                        isCreated.value = true
                         Log.d("success", it.body().toString())
                     }else{
                         Log.d("retrofit", it.message())

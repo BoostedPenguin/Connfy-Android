@@ -34,6 +34,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
+import com.google.android.material.button.MaterialButton
 import com.google.maps.android.PolyUtil
 import com.industryproject.connfy.R
 import com.industryproject.connfy.adapters.MeetingUsersAdapter
@@ -88,6 +89,10 @@ class MeetingViewFragment : Fragment(), OnMapReadyCallback {
                 enableOnReady(requireView())
             }
         })
+
+        requireView().findViewById<MaterialButton>(R.id.meetingNotesButton).setOnClickListener {
+            findNavController().navigate(R.id.nav_notes)
+        }
     }
 
     private fun disableOnStart(view: View) {

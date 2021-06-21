@@ -72,6 +72,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/meeting_add_to_meeting"
         app:iconSize="35dp"
+        android:id="@+id/meetingNotesButton"
         app:iconGravity="textEnd"
         app:icon="@drawable/ic_baseline_speaker_notes_24"/>
 

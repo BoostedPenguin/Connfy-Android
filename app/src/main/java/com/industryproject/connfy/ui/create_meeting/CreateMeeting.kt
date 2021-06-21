@@ -14,6 +14,7 @@ import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -82,7 +83,6 @@ class CreateMeeting : Fragment(), OnMapReadyCallback, GoogleMap.OnMapClickListen
             val title: String = dateTimeEditTxt.text.toString()
 
             model.createMeeting(routeList, LocalDateTime.of(year, month, day, hour, minutes), title, invitedUsers)
-            findNavController().navigate(R.id.action_nav_create_meeting_to_nav_home)
         }
 
         btnDatePicker.setOnClickListener{
@@ -90,6 +90,12 @@ class CreateMeeting : Fragment(), OnMapReadyCallback, GoogleMap.OnMapClickListen
             context?.let { it1 -> DatePickerDialog(it1, this, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH)) }?.show()
         }
 
+        model.isCreated.observe(viewLifecycleOwner, Observer {
+            if(it) {
+                model.isCreated.value = false;
+                findNavController().navigate(R.id.action_nav_create_meeting_to_nav_home)
+            }
+        })
 
     }
 
