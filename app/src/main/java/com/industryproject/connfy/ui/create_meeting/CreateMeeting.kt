@@ -14,7 +14,9 @@ import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
@@ -33,7 +35,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.properties.Delegates
 
-class CreateMeeting : Fragment(), OnMapReadyCallback, GoogleMap.OnMapClickListener,
+class CreateMeeting : Fragment(), OnMapReadyCallback,
     GoogleMap.OnMapLongClickListener, GoogleMap.OnMarkerClickListener, DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
     private val model: DashboardViewModel by activityViewModels()
     private var googleMap: GoogleMap? = null
@@ -82,7 +84,6 @@ class CreateMeeting : Fragment(), OnMapReadyCallback, GoogleMap.OnMapClickListen
             val title: String = dateTimeEditTxt.text.toString()
 
             model.createMeeting(routeList, LocalDateTime.of(year, month, day, hour, minutes), title, invitedUsers)
-            findNavController().navigate(R.id.action_nav_create_meeting_to_nav_home)
         }
 
         btnDatePicker.setOnClickListener{
@@ -90,30 +91,33 @@ class CreateMeeting : Fragment(), OnMapReadyCallback, GoogleMap.OnMapClickListen
             context?.let { it1 -> DatePickerDialog(it1, this, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH)) }?.show()
         }
 
+        model.isCreated.observe(viewLifecycleOwner, Observer {
+            if(it) {
+                model.isCreated.value = false;
+                findNavController().navigate(R.id.action_nav_create_meeting_to_nav_home)
+            }
+        })
 
     }
 
     override fun onMapReady(googleMap: GoogleMap?) {
         this.googleMap = googleMap
-        googleMap?.setOnMapClickListener(this)
+
+        googleMap?.moveCamera(
+            CameraUpdateFactory.newLatLngZoom(
+                (LatLng(
+                    51.4416,
+                    5.4697
+                )), 14f
+            )
+        )
+
         googleMap?.setOnMapLongClickListener(this)
         googleMap?.setOnMarkerClickListener(this)
     }
 
-    override fun onMapClick(latLng: LatLng) {
-        Toast.makeText(
-            context,
-            "onMapClick:${latLng.latitude} : ${latLng.longitude}",
-            Toast.LENGTH_LONG
-        ).show()
-    }
 
     override fun onMapLongClick(latLng: LatLng) {
-        Toast.makeText(
-            context,
-            "onMapLongClick:${latLng.latitude} : ${latLng.longitude}",
-            Toast.LENGTH_LONG
-        ).show()
 
         //Add marker on LongClick position
         val markerOptions = MarkerOptions().position(latLng).title(latLng.toString())
@@ -167,14 +171,9 @@ class CreateMeeting : Fragment(), OnMapReadyCallback, GoogleMap.OnMapClickListen
         builder.setMultiChoiceItems(
             choicesArray,
             checkedArray.toBooleanArray()
-        ) { dialog, which, isChecked ->
+        ) { _, which, isChecked ->
             checkedArray[which] = isChecked
 
-            val selected = choicesArray[which]
-            Toast.makeText(
-                context,
-                "$selected $isChecked", Toast.LENGTH_SHORT
-            ).show();
         }
 
         builder.setPositiveButton("OK") { _, _ ->

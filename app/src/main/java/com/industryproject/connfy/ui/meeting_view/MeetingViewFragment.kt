@@ -8,7 +8,10 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.drawable.Drawable
+import android.media.MediaPlayer
+import android.media.MediaRecorder
 import android.os.Bundle
+import android.os.Environment
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -16,9 +19,11 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.allViews
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -34,6 +39,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
+import com.google.android.material.button.MaterialButton
 import com.google.maps.android.PolyUtil
 import com.industryproject.connfy.R
 import com.industryproject.connfy.adapters.MeetingUsersAdapter
@@ -88,6 +94,44 @@ class MeetingViewFragment : Fragment(), OnMapReadyCallback {
                 enableOnReady(requireView())
             }
         })
+
+        requireView().findViewById<MaterialButton>(R.id.meetingNotesButton).setOnClickListener {
+            findNavController().navigate(R.id.nav_notes)
+        }
+
+
+        val buttonRec: MaterialButton = requireView().findViewById(R.id.buttonRec)
+        val buttonStop: MaterialButton = requireView().findViewById(R.id.buttonStop)
+
+        var path = Environment.getExternalStorageDirectory().absolutePath + "/recording.mp3"
+
+        mr = MediaRecorder()
+
+
+
+        if(ActivityCompat.checkSelfPermission(requireContext(),Manifest.permission.RECORD_AUDIO ) != PackageManager.PERMISSION_GRANTED)
+            ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.RECORD_AUDIO,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE), 111)
+        buttonRec.isEnabled = true
+
+        //start recording
+        buttonRec.setOnClickListener{
+            mr.setAudioSource(MediaRecorder.AudioSource.MIC)
+            mr.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
+            mr.setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
+            mr.setOutputFile(path)
+            mr.prepare()
+            mr.start()
+            buttonStop.isVisible = true
+            buttonRec.isVisible = false
+        }
+
+        //stop recording
+        buttonStop.setOnClickListener{
+            mr.stop()
+            buttonRec.isVisible = true
+            buttonStop.isVisible = false
+        }
     }
 
     private fun disableOnStart(view: View) {
@@ -111,7 +155,7 @@ class MeetingViewFragment : Fragment(), OnMapReadyCallback {
         val s = view.allViews
 
         s.iterator().forEach {
-            if (it.id == R.id.progressBar_cyclic) {
+            if (it.id == R.id.progressBar_cyclic || it.id == R.id.buttonStop) {
                 it.visibility = View.GONE
             } else {
                 it.visibility = View.VISIBLE
@@ -395,4 +439,21 @@ class MeetingViewFragment : Fragment(), OnMapReadyCallback {
                 ).show()
             }
         }
+
+
+    lateinit var mr : MediaRecorder
+
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        val buttonRec: Button = requireView().findViewById(R.id.buttonRec)
+        val buttonStop: Button = requireView().findViewById(R.id.buttonStop)
+
+        if(requestCode==111 && grantResults[0]==PackageManager.PERMISSION_GRANTED)
+            buttonRec.isVisible = true
+    }
 }
