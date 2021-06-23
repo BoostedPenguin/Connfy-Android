@@ -34,11 +34,7 @@ class HomeViewModel @Inject constructor(
                     meetings.value = MeetingResponse(emptyList())
                 }
                 else {
-                    val futureMeetings = it.body()!!.data.filter { meeting ->
-                        !passedMeeting(meeting.date!!._seconds)
-                    }
-
-                    meetings.postValue(MeetingResponse(futureMeetings))
+                    meetings.postValue(it.body())
                 }
                 Log.d("success", it.body().toString())
             }else{
