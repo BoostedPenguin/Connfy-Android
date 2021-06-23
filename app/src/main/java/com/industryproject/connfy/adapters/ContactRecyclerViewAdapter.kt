@@ -30,7 +30,7 @@ class ContactRecyclerViewAdapter : RecyclerView.Adapter<ContactRecyclerViewAdapt
     override fun onBindViewHolder(holder: ContactHolder, position: Int) {
         val currentContact = contacts[position]
         holder.contact = currentContact
-        val displayName: String = currentContact.email?: currentContact.name?: ""
+        val displayName: String = currentContact.name?: currentContact.email?: ""
 
         holder.contactButton.text =  displayName
     }
