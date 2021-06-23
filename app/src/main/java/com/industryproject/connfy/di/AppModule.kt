@@ -32,7 +32,7 @@ import javax.inject.Singleton
 object AppModule{
 
     @Provides
-    fun provideBaseUrl() = "http://10.0.2.2:3000/"
+    fun provideBaseUrl() = "https://connfy.azurewebsites.net/"
 
 
     class NullOnEmptyConverterFactory : Converter.Factory() {
