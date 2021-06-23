@@ -79,6 +79,8 @@ class AuthRegisterFragment : Fragment() {
 
         model.onCreationComplete.observe(viewLifecycleOwner, Observer {
             if(it) {
+                view.findViewById<ProgressBar>(R.id.progressBarRegister).visibility = View.INVISIBLE
+
                 model.onCreationComplete.value = false;
                 val intent = Intent(context, DashboardActivity::class.java)
                 signOut.launch(intent)
@@ -91,6 +93,9 @@ class AuthRegisterFragment : Fragment() {
     }
 
     private fun createUser(email: String, password: String, name: String) {
+
+        requireView().findViewById<ProgressBar>(R.id.progressBarRegister).visibility = View.VISIBLE
+
         auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(requireActivity()) { task ->
                     if (task.isSuccessful) {
@@ -109,6 +114,8 @@ class AuthRegisterFragment : Fragment() {
                                 }
 
                     } else {
+                        requireView().findViewById<ProgressBar>(R.id.progressBarRegister).visibility = View.INVISIBLE
+
                         // If sign in fails, display a message to the user.
                         Toast.makeText(context, task.exception?.message.toString(), Toast.LENGTH_SHORT).show()
                     }

@@ -75,5 +75,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/buttonLoginEmail"/>
 
+    <ProgressBar
+        android:elevation="20dp"
+        android:id="@+id/progressBarEmail"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:indeterminate="true"
+        android:indeterminateTint="@color/secondary"
+        android:indeterminateTintMode="src_atop"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="@+id/buttonLoginEmail"
+        app:layout_constraintStart_toStartOf="@+id/buttonLoginEmail"
+        app:layout_constraintBottom_toBottomOf="@id/buttonLoginEmail"
+        app:layout_constraintTop_toTopOf="@+id/buttonLoginEmail" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

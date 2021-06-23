@@ -87,4 +87,20 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/buttonCreateEmail"/>
+
+    <ProgressBar
+        android:elevation="20dp"
+        android:id="@+id/progressBarRegister"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:indeterminate="true"
+        android:indeterminateTint="@color/secondary"
+        android:indeterminateTintMode="src_atop"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="@+id/buttonCreateEmail"
+        app:layout_constraintStart_toStartOf="@+id/buttonCreateEmail"
+        app:layout_constraintBottom_toBottomOf="@id/buttonCreateEmail"
+        app:layout_constraintTop_toTopOf="@+id/buttonCreateEmail" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

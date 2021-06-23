@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ProgressBar
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -17,6 +18,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.tasks.OnCanceledListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
@@ -68,6 +70,7 @@ class AuthMainFragment : Fragment() {
         model.onCreationComplete.observe(viewLifecycleOwner, Observer {
             if(it) {
                 model.onCreationComplete.value = false;
+                view.findViewById<ProgressBar>(R.id.progressBarGoogle).visibility = View.INVISIBLE
                 val intent = Intent(context, DashboardActivity::class.java)
                 signOut.launch(intent)
             }
@@ -100,6 +103,7 @@ class AuthMainFragment : Fragment() {
     }
 
     private fun signIn() {
+        requireView().findViewById<ProgressBar>(R.id.progressBarGoogle).visibility = View.VISIBLE
         val intent = googleSignInClient.signInIntent
         signInIntent.launch(intent)
     }
@@ -117,6 +121,7 @@ class AuthMainFragment : Fragment() {
                             model.createUserInDBEmail("GOOGLE", user.displayName?: "", user.email?: "")
                         }
                     } else {
+                        requireView().findViewById<ProgressBar>(R.id.progressBarGoogle).visibility = View.INVISIBLE
                         // If sign in fails, display a message to the user.
                         Log.w("mytag", "signInWithCredential:failure", task.exception)
                     }
