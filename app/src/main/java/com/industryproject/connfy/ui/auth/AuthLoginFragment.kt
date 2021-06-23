@@ -74,6 +74,8 @@ class AuthLoginFragment : Fragment() {
     }
 
     private fun signIn(email: String, password: String) {
+        requireView().findViewById<ProgressBar>(R.id.progressBarEmail).visibility = View.VISIBLE
+
         auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(requireActivity()) { task ->
                     if (task.isSuccessful) {
@@ -84,6 +86,7 @@ class AuthLoginFragment : Fragment() {
                                     if (it.isSuccessful) {
                                         val idToken: String? = it.result?.token
 
+                                        requireView().findViewById<ProgressBar>(R.id.progressBarEmail).visibility = View.INVISIBLE
 
                                         val intent = Intent(context, DashboardActivity::class.java)
                                         signOut.launch(intent)
@@ -94,6 +97,8 @@ class AuthLoginFragment : Fragment() {
                                 }
 
                     } else {
+                        requireView().findViewById<ProgressBar>(R.id.progressBarEmail).visibility = View.INVISIBLE
+
                         // If sign in fails, display a message to the user.
                         Toast.makeText(context, task.exception?.message.toString(), Toast.LENGTH_SHORT).show()
 
